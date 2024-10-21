@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "vitest",
     "build": "tsup src/index.ts --format cjs,esm --dts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "tsc",
+    "test": "vitest run",
+    "ci": "pnpm lint && pnpm test && pnpm build"
   },
   "keywords": [],
   "author": "Justin Philpott",
@@ -19,6 +22,7 @@
     "husky": "^9.1.6",
     "prettier": "^3.3.3",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3"
   }
 }
