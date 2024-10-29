@@ -1,5 +1,12 @@
 # @jphil/bookwhen-client
 
+## 0.0.3
+
+### Patch Changes
+
+- NPM publication flow improvements
+- 29361bb: Adding npm ignore file to clean up the published package
+
 ## 0.0.2
 
 ### Patch Changes
