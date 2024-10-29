@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "vitest",
     "build": "tsup src/index.ts --format esm --dts",
-    "lint": "tsc && pnpm format",
+    "lint": "tsc",
     "test": "vitest run",
     "ci": "pnpm lint && pnpm test && pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changeset publish",

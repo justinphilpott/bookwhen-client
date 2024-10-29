@@ -1,13 +1,13 @@
 // eslint.config.js
-import eslintPluginPrettier from "eslint-plugin-prettier";
-import eslintConfigPrettier from "eslint-config-prettier";
+import eslintPluginPrettier from 'eslint-plugin-prettier';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   {
-    files: ["**/*.js", "**/*.ts", "**/*.tsx"],
+    files: ['**/*.js', '**/*.ts', '**/*.tsx'],
     languageOptions: {
       ecmaVersion: 2021,
-      sourceType: "module",
+      sourceType: 'module',
       globals: {
         browser: true,
         es6: true,
