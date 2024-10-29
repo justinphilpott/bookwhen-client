@@ -1,6 +1,6 @@
 {
   "name": "@jphil/bookwhen-client",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "",
   "private": false,
   "main": "/dist/index.js",
@@ -8,21 +8,42 @@
   "types": "/dist/index.d.ts",
   "scripts": {
     "dev": "vitest",
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "lint": "tsc",
+    "build": "tsup src/index.ts --format esm --dts",
+    "lint": "tsc && pnpm format",
     "test": "vitest run",
     "ci": "pnpm lint && pnpm test && pnpm build",
     "release": "pnpm lint && pnpm test && pnpm build && changeset publish",
     "commit": "cz",
     "type-check": "tsc --noEmit",
     "pre-commit": "pnpm lint",
-    "prepush": "pnpm test"
+    "prepush": "pnpm test",
+    "prettier": "prettier --check 'src/**/*.ts'",
+    "format": "prettier --write 'src/**/*.ts' README.md"
   },
-  "keywords": [],
+  "keywords": [
+    "bookwhen",
+    "booking",
+    "api client"
+  ],
   "type": "module",
-  "author": "Justin Philpott",
+  "author": {
+    "name": "Justin Philpott",
+    "email": "justin@jphil.dev"
+  },
+  "homepage": "https://github.com/justinphilpott/bookwhen-client",
+  "bugs": {
+    "url": "https://github.com/justinphilpott/bookwhen-client/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/justinphilpott/bookwhen-client.git"
+  },
+  "files": [
+    "dist"
+  ],
   "license": "ISC",
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.16.4",
     "@changesets/cli": "^2.27.9",
     "@commitlint/cli": "^19.5.0",
     "@commitlint/config-conventional": "^19.5.0",
