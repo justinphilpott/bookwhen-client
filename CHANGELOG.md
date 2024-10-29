@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.0.4
+
+### Patch Changes
+
+- Fix build (error in tsconfig)
+
 ## 0.0.3
 
 ### Patch Changes

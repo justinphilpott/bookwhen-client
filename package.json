@@ -1,6 +1,6 @@
 {
   "name": "@jphil/bookwhen-client",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "private": false,
   "main": "/dist/index.js",
@@ -15,7 +15,7 @@
     "release": "pnpm lint && pnpm test && pnpm build && changeset publish",
     "commit": "cz",
     "type-check": "tsc --noEmit",
-    "pre-commit": "pnpm lint",
+    "pre-commit": "pnpm lint && pnpm build",
     "prepush": "pnpm test",
     "prettier": "prettier --check 'src/**/*.ts'",
     "format": "prettier --write 'src/**/*.ts' README.md"

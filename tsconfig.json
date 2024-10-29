@@ -24,7 +24,7 @@
     /* AND if you're building for a library: */
     "declaration": true,
 
-    "lib": ["es2022"]
+    "lib": ["ESNext", "dom"]
   },
   "include": ["src/**/*"], // Include your source files
   "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
