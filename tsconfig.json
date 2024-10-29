@@ -1,15 +1,30 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "noEmit": true,
+    /* Base Options: */
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
     "skipLibCheck": true,
-    "outDir": "./dist",
-    "baseUrl": "./" 
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+
+    /* If transpiling with TypeScript: */
+    "module": "NodeNext",
+    "outDir": "dist",
+    "rootDir": "src",
+    "sourceMap": true,
+
+    /* AND if you're building for a library: */
+    "declaration": true,
+
+    "lib": ["es2022"]
   },
   "include": ["src/**/*"], // Include your source files
   "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
