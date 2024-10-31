@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.0.5
+
+### Patch Changes
+
+- Test of new pipelines
+
 ## 0.0.4
 
 ### Patch Changes
