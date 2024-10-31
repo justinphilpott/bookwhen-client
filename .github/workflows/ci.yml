@@ -1,4 +1,4 @@
-name: Standard CI Workflow
+name: Standard CI Workflow - test
 
 on:
   pull_request:
