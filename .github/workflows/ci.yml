@@ -9,8 +9,6 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   standard-ci:
-    # Ensure that the job does not run for release branches
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && startsWith(github.head_ref, 'release') == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
