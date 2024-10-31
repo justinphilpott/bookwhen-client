@@ -1,7 +1,7 @@
 name: Standard CI Workflow
 
 on:
-  push:
+  pull_request:
     branches:
       - 'main'
 
@@ -9,23 +9,21 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
   standard-ci:
-    # Ensure that the job does not run for release branches
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && startsWith(github.head_ref, 'release') == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
           cache: 'pnpm'
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
   
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
