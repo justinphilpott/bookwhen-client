@@ -1,4 +1,4 @@
-name: Publish release to NPM on release branch merge to main
+name: Standard CI Workflow
 
 on:
   push:
@@ -8,8 +8,9 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build-and-publish:
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release'
+  standard-ci:
+    # Ensure that the job does not run for release branches
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && startsWith(github.head_ref, 'release') == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -34,9 +35,3 @@ jobs:
 
       - name: Build project
         run: pnpm build
-
-      - name: Publish to npm
-        run: pnpm changeset publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

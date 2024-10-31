@@ -34,6 +34,8 @@ pnpm add @jphil/bookwhen-client
 
 ## Usage
 
+\[wip\]!
+
 ```typescript
 // ... todo
 ```
@@ -46,13 +48,22 @@ Required configuration options:
 
 API requests to the Bookwhen API are authenticated using Basic Authentication with the API Key as the username and a blank password.
 
-API keys can be generated in the [https://YOUR-ACCOUNT-NAME.bookwhen.com/settings/api_access_permission_sets](API tokens setup area of your Bookwhen account).
+API keys can be generated in the [API tokens setup area of your Bookwhen account](https://YOUR-ACCOUNT-NAME.bookwhen.com/settings/api_access_permission_sets).
 
 ## Contributing
 
-Contributions are welcome! (proper guidelines to be written)
+### How to Contribute
 
-### Setting Up Husky for Contributions
+Thank you for your interest in contributing! 
+
+This library follows the standard Github Flow contribution workflow, have a read of the guide to [Github Flow](https://docs.github.com/en/get-started/using-github/github-flow#following-github-flow) from the Github docs, if you're not familiar.
+
+### Contribution Requirements
+
+- Use the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style when writing your commit messages.
+- Ensure you create a [changeset](https://github.com/changesets/changesets) as the final commit before creating a new PR (or updating one).
+
+#### Setting Up Husky for Contributions
 
 This project uses Husky for Git hooks and Commitlint to enforce commit message standards.
 
@@ -74,6 +85,33 @@ This command sets up a .husky/ directory in the project, linking the necessary s
 
 Thank you for helping maintain commit quality and consistency!
 
+\[wip\]!
+
+## CI 
+
+>>> consider changesets in the following?
+
+### Contrib flow
+
+- Contrib user clones repo locally
+- Contrib user creates a feature branch
+- Contrib user generates commits to feature branch
+- Contrib user create a PR back to the origin
+- CI pipeline activates and runs at least tests && build
+-> On success PR can be merged to main by Maintainer
+-> On fail PR needs updating until success
+
+
+### Maintainer flow
+
+- Maintainer decides that code on main is ready to release
+- Mt checks out a branch named 
+
+
+->> question: if users create changesets, how to ensure that 
+
+
+
 ## Roadmap
 
 - Keep up with any future changes or additions to the [Bookwhen API](https://api.bookwhen.com/v2).
@@ -81,7 +119,3 @@ Thank you for helping maintain commit quality and consistency!
 ## License
 
 ISC License. See [LICENSE](LICENSE) for more information.
-
-## Notice
-
-This software is "unofficial" - its development is not affiliated with or funded by Bookwhen.
