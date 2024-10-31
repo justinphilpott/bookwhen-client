@@ -1,7 +1,7 @@
 name: Standard CI Workflow
 
 on:
-  push:
+  pull_request:
     branches:
       - 'main'
 
