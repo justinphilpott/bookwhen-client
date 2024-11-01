@@ -96,21 +96,21 @@ Thank you for helping maintain commit quality and consistency!
 - Contrib user clones repo locally
 - Contrib user creates a feature branch
 - Contrib user generates commits to feature branch
-- Contrib user create a PR back to the origin
+- Contrib user create a PR back to the origin/[default branch]
 - CI pipeline activates and runs at least tests && build
 -> On success PR can be merged to main by Maintainer
--> On fail PR needs updating until success
+-> On fail PR needs updating until tests and build success 
 
 
 ### Maintainer flow
 
 - Maintainer decides that code on main is ready to release
-- Mt checks out a branch named 
-
-
-->> question: if users create changesets, how to ensure that 
-
-
+- Mt pulls main
+- Mt checks out new "release" branch
+- Mt runs: pnpm changeset add
+- Mt commits results when happy with the change set
+- Mt run changeset version 
+[WIP]
 
 ## Roadmap
 
@@ -119,3 +119,4 @@ Thank you for helping maintain commit quality and consistency!
 ## License
 
 ISC License. See [LICENSE](LICENSE) for more information.
+
