@@ -119,6 +119,3 @@ Thank you for helping maintain commit quality and consistency!
 ## License
 
 ISC License. See [LICENSE](LICENSE) for more information.
-
-
-test
