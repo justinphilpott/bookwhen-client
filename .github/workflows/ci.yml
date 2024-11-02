@@ -5,10 +5,12 @@ on:
     branches:
       - 'main'
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+        
 jobs:
-  standard-ci:
+  test-then-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
