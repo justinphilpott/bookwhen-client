@@ -3,7 +3,7 @@ name: Publish release to NPM on release branch merge to main
 on:
   push:
     tags:
-      - 'v*' # This matches any tag that starts with 'v', e.g., v1.0, v2.0.0
+      - v*.*.*
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
