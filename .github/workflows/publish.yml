@@ -5,11 +5,13 @@ on:
     branches:
       - 'main'
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
 jobs:
   build-and-publish:
-    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'release'
+    if: github.event.pull_request.head.ref == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
