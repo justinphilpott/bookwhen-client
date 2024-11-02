@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.0.7
+
+### Patch Changes
+
+- bdd2ef1: CI Publish Pipelines test
+
 ## 0.0.6
 
 ### Patch Changes
