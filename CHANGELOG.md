@@ -1,5 +1,17 @@
 # @jphil/bookwhen-client
 
+## 0.0.7
+
+### Patch Changes
+
+- bdd2ef1: CI Publish Pipelines test
+
+## 0.0.6
+
+### Patch Changes
+
+- d4977cd: Fixed commitlint conflict with changesets commit styles
+
 ## 0.0.5
 
 ### Patch Changes
