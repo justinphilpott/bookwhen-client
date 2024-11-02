@@ -36,6 +36,9 @@ jobs:
       - name: Build project
         run: pnpm build
 
+      - name: Configure npm authentication
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+
       - name: Publish to npm
         run: pnpm changeset publish --no-tag
         env:
