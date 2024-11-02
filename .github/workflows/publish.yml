@@ -2,8 +2,8 @@ name: Publish release to NPM on release branch merge to main
 
 on:
   push:
-    branches:
-      - 'main'
+    tags:
+      - 'v*' # This matches any tag that starts with 'v', e.g., v1.0, v2.0.0
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,7 +11,6 @@ concurrency:
   
 jobs:
   build-and-publish:
-    if: github.event.pull_request.head.ref == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -38,7 +37,7 @@ jobs:
         run: pnpm build
 
       - name: Publish to npm
-        run: pnpm changeset publish
+        run: pnpm changeset publish --no-tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
