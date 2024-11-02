@@ -21,6 +21,6 @@ export default {
     // loosen checking rules to allow changesets "RELEASING: Startcase..." 
     // style commits created by "changeset version" to pass checks
     'type-case': [2, 'always', ['lower-case', 'upper-case']],
-    'subject-case': [2, 'always', ['lower-case', 'start-case']]
+    'subject-case': [2, 'always', ['lower-case', 'sentence-case']]
   },
 };
