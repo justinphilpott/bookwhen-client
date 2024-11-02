@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.0.8
+
+### Patch Changes
+
+- f6cfb09: Tweak CI publish workflow pnpm and node order issue bug.
+
 ## 0.0.7
 
 ### Patch Changes
