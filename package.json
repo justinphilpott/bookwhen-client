@@ -1,12 +1,13 @@
 {
   "name": "@jphil/bookwhen-client",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "",
   "private": false,
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
+    "prepare": "pnpm husky install",
     "dev": "vitest",
     "build": "tsc",
     "lint": "tsc",
