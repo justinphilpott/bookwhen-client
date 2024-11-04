@@ -52,65 +52,7 @@ API keys can be generated in the [API tokens setup area of your Bookwhen account
 
 ## Contributing
 
-### How to Contribute
-
-Thank you for your interest in contributing! 
-
-This library follows the standard Github Flow contribution workflow, have a read of the guide to [Github Flow](https://docs.github.com/en/get-started/using-github/github-flow#following-github-flow) from the Github docs, if you're not familiar.
-
-### Contribution Requirements
-
-- Use the [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) style when writing your commit messages.
-- Ensure you create a [changeset](https://github.com/changesets/changesets) as the final commit before creating a new PR (or updating one).
-
-#### Setting Up Husky for Contributions
-
-This project uses Husky for Git hooks and Commitlint to enforce commit message standards.
-
-Install Dependencies: First, clone the repository and install the project dependencies, which include Husky:
-
-```bash
-git clone <repository-url>
-cd <repository-directory>
-pnpm install
-```
-
-Activate Husky Hooks: After installing dependencies, you need to initialize Husky's Git hooks. Run the following command:
-
-```bash
-pnpm husky install
-```
-
-This command sets up a .husky/ directory in the project, linking the necessary scripts to Git’s hook system. Once activated, Husky will automatically enforce commit message standards during commits.
-
-Thank you for helping maintain commit quality and consistency!
-
-\[wip\]!
-
-## CI 
-
->>> consider changesets in the following?
-
-### Contrib flow
-
-- Contrib user clones repo locally
-- Contrib user creates a feature branch
-- Contrib user generates commits to feature branch
-- Contrib user create a PR back to the origin/[default branch]
-- CI pipeline activates and runs at least tests && build
--> On success PR can be merged to main by Maintainer
--> On fail PR needs updating until tests and build success 
-
-
-### Maintainer flow
-
-- Maintainer decides that code on main is ready to release
-- Mt pulls main
-- Mt checks out new "release" branch
-- Mt runs: pnpm changeset add
-- Mt commits results when happy with the change set
-- Mt run changeset version 
-[WIP]
+Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 ## Roadmap
 
