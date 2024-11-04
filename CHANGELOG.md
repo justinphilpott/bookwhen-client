@@ -1,11 +1,16 @@
 # @jphil/bookwhen-client
 
+## 0.0.10
+
+### Patch Changes
+
+- bb44c68: Docs update
+
 ## 0.0.9
 
 ### Patch Changes
 
 - 9526aa4: fix(ci): enable npm publish - test
-- bb44c68: Docs update
 
 ## 0.0.8
 
