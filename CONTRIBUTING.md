@@ -31,8 +31,8 @@ To get setup and running, just follow these steps:
    $ git checkout -b feature/your-feature
    ```
    
-### 3. Develop and Commit:  
-   Make your code changes (ensure you are working against the latest code, so pull main before you start work and before you commit) and commit them to the your branch with a clear and descriptive message that follows the [Conventional Commits standard](https://www.conventionalcommits.org):
+### 3. Develop and Commit:
+   Make your code changes, ensuring you periodically rebase your branch onto the latest main to keep it up to date and minimize conflicts. This should be done at the start of your work and just before opening a pull request. Commit your changes to your branch with a clear and descriptive message that follows the [Conventional Commits standard](https://www.conventionalcommits.org):
 
    ```bash
    $ git add .
