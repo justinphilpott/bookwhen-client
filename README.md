@@ -56,7 +56,12 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 ## Roadmap
 
-- Keep up with any future changes or additions to the [Bookwhen API](https://api.bookwhen.com/v2).
+- Todo
+[] - patch in code from previous repo from src
+[] - 
+
+
+- Keep up with any future changes or additions to the [Bookwhen API](https://api.bookwhen.com/v2), additions will be driven mainly by this.
 
 ## License
 
