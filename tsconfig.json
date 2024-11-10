@@ -24,7 +24,10 @@
     /* AND if you're building for a library: */
     "declaration": true,
 
-    "lib": ["ESNext", "dom"]
+    "lib": ["ESNext", "dom"],
+
+    /* Include Vitest types */
+    "types": ["vitest"]
   },
   "include": ["src/**/*"], // Include your source files
   "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
