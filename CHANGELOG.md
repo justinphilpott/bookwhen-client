@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.1.0
+
+### Minor Changes
+
+- 0b5c39a: Adding BookwhenClient, Events service, supporting code and tests
+
 ## 0.0.10
 
 ### Patch Changes
