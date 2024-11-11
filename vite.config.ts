@@ -24,6 +24,7 @@ export default defineConfig({
         '*.config.*',
         'services/event/EventInterfaces.ts',
         'services/event/EventTypes.ts',
+        '**/*.{spec,test}.{js,ts,jsx,tsx}'
       ]
     },
     exclude: [...configDefaults.exclude],
