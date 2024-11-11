@@ -1,26 +1,14 @@
-// eslint.config.js
-import eslintPluginPrettier from 'eslint-plugin-prettier';
-import eslintConfigPrettier from 'eslint-config-prettier';
-
 export default [
   {
-    files: ['**/*.js', '**/*.ts', '**/*.tsx'],
+    files: ["**/*.ts", "**/*.tsx"], // Apply these settings to TypeScript files
     languageOptions: {
-      ecmaVersion: 2021,
-      sourceType: 'module',
-      globals: {
-        browser: true,
-        es6: true,
-        node: true,
-      },
+      parser: "@typescript-eslint/parser",
     },
     plugins: {
-      prettier: eslintPluginPrettier,
+      "@typescript-eslint": require("@typescript-eslint/eslint-plugin"),
     },
     rules: {
-      ...eslintConfigPrettier.rules, // integrates Prettier rules
-      // Add any custom rules here, e.g.:
-      // "semi": ["error", "always"]
-    },
-  },
+      ...require("@typescript-eslint/eslint-plugin").configs.recommended.rules,
+    }
+  }
 ];

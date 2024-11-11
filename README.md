@@ -21,8 +21,8 @@ You'll likely be at least somewhat familiar with the [Bookwhen](www.bookwhen.com
 
 ## Features
 
-- Lightweight and easy to integrate
-- Fully typed for TypeScript support
+- Provides an easy way to pull your data from Bookwhen for NodeJS environments
+- Provides fully typed methods for each model (so far just the events model) in the Bookwhen API v2
 
 ## Installation
 
@@ -34,10 +34,18 @@ pnpm add @jphil/bookwhen-client
 
 ## Usage
 
-\[wip\]!
+!N.B. this usage structure may change as I progress towards a 1.0.0
 
 ```typescript
-// ... todo
+import { createBookwhenClient } from 'bookwhen-client';
+
+const client = createBookwhenClient(YOUR_API_KEY)
+const event = client.event.getByID({myEventId});
+const events = client.event.getMultiple({
+  filters: ["filter1", "filter2"]
+  includes: ["inc1", "inc2"]
+});
+
 ```
 
 ## Configuration
@@ -56,14 +64,15 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 ## Roadmap
 
-- Todo
-[] - patch in code from previous repo from src
-[] - 
-
-
 - Keep up with any future changes or additions to the [Bookwhen API](https://api.bookwhen.com/v2), additions will be driven mainly by this.
+- Possibly add a "fields" param to service methods to allow response filtering
+
+- Todos
+[] - put Zod in place in more areas to strengthen runtime type guards
+[] - refine error handling
+[] - write more integration tests
+[] - write services for the other integrations
 
 ## License
 
 ISC License. See [LICENSE](LICENSE) for more information.
-
