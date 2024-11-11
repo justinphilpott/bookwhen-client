@@ -68,6 +68,7 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 - Possibly add a "fields" param to service methods to allow response filtering
 
 - Todos
+[] - put Zod in place in more areas to strengthen runtime type guards
 [] - refine error handling
 [] - write more integration tests
 [] - write services for the other integrations
