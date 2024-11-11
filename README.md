@@ -2,7 +2,7 @@
 
 \[wip\]!
 
-An API client library for the [Bookwhen](www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. Intended for server-side environments.
+An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. Intended for server-side environments.
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ An API client library for the [Bookwhen](www.bookwhen.com) booking platform [API
 
 ## Overview
 
-You'll likely be at least somewhat familiar with the [Bookwhen](www.bookwhen.com) booking platform if you've landed here. But if not, you'll want to have a look at their [API (v2) documentation](https://api.bookwhen.com/v2). There's also a nice [Swagger style layout of the Bookwhen API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml)
+You'll likely be at least somewhat familiar with the [Bookwhen](https://www.bookwhen.com) booking platform if you've landed here. But if not, you'll want to have a look at their [API (v2) documentation](https://api.bookwhen.com/v2). There's also a nice [Swagger style layout of the Bookwhen API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml)
 
 ## Features
 
@@ -67,11 +67,11 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 - Keep up with any future changes or additions to the [Bookwhen API](https://api.bookwhen.com/v2), additions will be driven mainly by this.
 - Possibly add a "fields" param to service methods to allow response filtering
 
-- Todos
-[] - put Zod in place in more areas to strengthen runtime type guards
-[] - refine error handling
-[] - write more integration tests
-[] - write services for the other integrations
+### Todos
+- [] put Zod in place in more areas to strengthen runtime type guards
+- [] refine error handling
+- [] write more integration tests
+- [] write services for the other integrations
 
 ## License
 
