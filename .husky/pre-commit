@@ -1,2 +1,2 @@
 # .husky/pre-commit
-pnpm lint
+pnpm lint && pnpm test
