@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    /* Base Options: */
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "es2022",
@@ -9,26 +8,17 @@
     "moduleDetection": "force",
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-
-    /* Strictness */
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-
-    /* If transpiling with TypeScript: */
     "module": "NodeNext",
     "outDir": "dist",
     "rootDir": "src",
     "sourceMap": true,
-
-    /* AND if you're building for a library: */
     "declaration": true,
-
     "lib": ["ESNext", "dom"],
-
-    /* Include Vitest types */
     "types": ["vitest"]
   },
-  "include": ["src/**/*"], // Include your source files
-  "exclude": ["node_modules", "dist"] // Exclude unnecessary directories
+  "include": ["src/**/*"], 
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }
