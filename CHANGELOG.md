@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.1.1
+
+### Patch Changes
+
+- 26c3d62: Fix dependencies (axios, zod), remove dotenv
+
 ## 0.1.0
 
 ### Minor Changes
