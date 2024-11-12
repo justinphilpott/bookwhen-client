@@ -50,13 +50,11 @@ interface BookwhenClientOptions {
  * @param apiKey - The API key used for authentication.
  * @returns The Axios instance.
  */
-export function createBookwhenClient(
-  options: BookwhenClientOptions,
-): BookwhenClient {
+export function createBookwhenClient(options: BookwhenClientOptions): BookwhenClient {
   const { apiKey, baseURL = 'https://api.bookwhen.com/v2' } = options;
 
   const axiosInstance = axios.create({
-    baseURL: 'https://api.bookwhen.com/v2',
+    baseURL: baseURL,
     auth: { username: apiKey, password: '' },
   });
 
