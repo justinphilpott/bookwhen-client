@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.2.0
+
+### Minor Changes
+
+- Fixed response processing issue. Added debug flag.
+
 ## 0.1.1
 
 ### Patch Changes
