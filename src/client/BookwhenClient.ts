@@ -43,6 +43,7 @@ export class BookwhenClient {
 interface BookwhenClientOptions {
   apiKey: string;
   baseURL?: string;
+  debug?: boolean;
 }
 
 /**
@@ -51,7 +52,7 @@ interface BookwhenClientOptions {
  * @returns The Axios instance.
  */
 export function createBookwhenClient(options: BookwhenClientOptions): BookwhenClient {
-  const { apiKey, baseURL = 'https://api.bookwhen.com/v2' } = options;
+  const { apiKey, baseURL = 'https://api.bookwhen.com/v2', debug = false } = options;
 
   const axiosInstance = axios.create({
     baseURL: baseURL,
@@ -59,7 +60,7 @@ export function createBookwhenClient(options: BookwhenClientOptions): BookwhenCl
   });
 
   axiosInstance.interceptors.response.use(
-    (response) => response.data ?? response,
+    (response) => response,
     (error) => {
       if (error.response) {
         const status = error.response.status;
@@ -75,6 +76,16 @@ export function createBookwhenClient(options: BookwhenClientOptions): BookwhenCl
       return Promise.reject(error);
     },
   );
+
+  if(debug) {
+    // Add a request interceptor to log the details
+    axiosInstance.interceptors.request.use(request => {
+      console.log('Bookwhen Request Debug:', {
+        request: request
+      });
+      return request;
+    });
+  }
 
   return new BookwhenClient(axiosInstance);
 }
