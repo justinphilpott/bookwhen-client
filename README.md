@@ -36,12 +36,12 @@ pnpm add @jphil/bookwhen-client
 
 ```typescript
 // import the client factory
-import { createBookwhenClient } from 'bookwhen-client';
+import { createBookwhenClient } from '@jphil/bookwhen-client';
 
-// create the client
-const client = createBookwhenClient(YOUR_API_KEY)
+// create the client (optional debug param to get requests logged to console)
+const client = createBookwhenClient({ apiKey: 'your-API-key'[, debug = true]});
 
-// get a single event, using method on events Service
+// use events Service method to get a single event
 const event = client.events.getById({eventId: 'some-id'});
 
 // get all events
@@ -53,7 +53,7 @@ const events_2025 = client.events.getMultiple({
     from: '20250101',
     to: '20251231'
   ]
-})
+});
 
 ```
 
