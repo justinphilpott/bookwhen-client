@@ -1,8 +1,6 @@
 # `@jphil/bookwhen-client`
 
-\[wip\]!
-
-An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. Intended for server-side environments.
+An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. Intended for server-side environments. \[wip\]!
 
 ## Table of Contents
 
@@ -37,14 +35,25 @@ pnpm add @jphil/bookwhen-client
 !N.B. this usage structure may change as I progress towards a 1.0.0
 
 ```typescript
+// import the client factory
 import { createBookwhenClient } from 'bookwhen-client';
 
+// create the client
 const client = createBookwhenClient(YOUR_API_KEY)
-const event = client.event.getByID({myEventId});
-const events = client.event.getMultiple({
-  filters: ["filter1", "filter2"]
-  includes: ["inc1", "inc2"]
-});
+
+// get a single event, using method on events Service
+const event = client.events.getById({eventId: 'some-id'});
+
+// get all events
+const events = client.events.getMultiple();
+
+// get all events in 2025
+const events_2025 = client.events.getMultiple({
+  filters: [
+    from: '20250101',
+    to: '20251231'
+  ]
+})
 
 ```
 
@@ -69,9 +78,9 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 ### Todos
 - [] put Zod in place in more areas to strengthen runtime type guards
-- [] refine error handling
-- [] write more integration tests
-- [] write services for the other integrations
+- [] flesh out e2e tests
+- [] write services for the other models in the API
+- [] create e2e test github action workflow
 
 ## License
 

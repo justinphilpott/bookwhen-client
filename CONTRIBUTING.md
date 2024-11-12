@@ -48,7 +48,7 @@ To get setup and running, just follow these steps:
    $ pnpm changeset
    ```
 
-   You will be asked to provide a detailed description of your changes. This will be used to generate a changelog when we publish an update, so be clear and concise. 
+   You will be asked to provide a detailed description of your changes. This will be used to generate a changelog when we publish an update, so be clear and concise. This will create a commit. N.B. DO NOT run "changeset version" which will try to bump versions - any PR's with version bumps will not be accepted.
 
    [Learn more about Changesets](https://github.com/atlassian/changesets/tree/master/packages/cli).
 
@@ -60,7 +60,7 @@ To get setup and running, just follow these steps:
    ```
 
 ### 6. Open a Pull Request (PR):  
-   On GitHub, open a PR from your branch in your forked repository to the main branch of the original repository. Use the PR template to include a summary, any related issues, testing steps, and documentation updates.
+   On GitHub, open a PR from your branch in your forked repository to the main branch of this repository. Use the PR template to include a summary, any related issues, testing steps, and documentation updates.
 
 ### 7. Sync with Main Regularly:  
    For long-running PRs, periodically sync your branch with main to avoid conflicts:
