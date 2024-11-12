@@ -40,17 +40,6 @@ export class BookwhenRequest {
       for (let key in filters) {
         let value = filters[key];
         if (Array.isArray(value) && value && value.length > 0) {
-          // const encodedValues = value.map((v: string) => {
-          //   console.log('typeof v', typeof v);
-          //   if (typeof v === 'undefined') {
-          //     return '';
-          //   }
-          //   if (v.length === 0) {
-          //     return '';
-          //   }
-          //   return encodeURIComponent(v);
-          // }).join(',');
-
           const encodedValues = value
           .filter((v: string) => typeof v === 'string' && v.length > 0)
           .map((v: string) => encodeURIComponent(v))
