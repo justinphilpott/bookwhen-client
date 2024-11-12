@@ -43,7 +43,9 @@
     "url": "https://github.com/justinphilpott/bookwhen-client.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "license": "ISC",
   "devDependencies": {
