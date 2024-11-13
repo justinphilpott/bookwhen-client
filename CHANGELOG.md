@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.2.2
+
+### Patch Changes
+
+- 66af389: Docs refinements
+
 ## 0.2.1
 
 ### Patch Changes
