@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.2.4
+
+### Patch Changes
+
+- ad4e2f2: Minor docs edits
+
 ## 0.2.3
 
 ### Patch Changes
