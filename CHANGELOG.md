@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.2.3
+
+### Patch Changes
+
+- 3430ac1: Docs formatting
+
 ## 0.2.2
 
 ### Patch Changes
