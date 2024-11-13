@@ -61,6 +61,8 @@ const events_2025 = await client.events.getMultiple({
   includes: ['location']   // Optional: Include related resources
 });
 
+```
+
 (N.B. Ensure you wrap the above statements in try/catch blocks to catch errors which could be thrown)
 
 Valid filters and includes for each method are detailed in the [API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml) 
@@ -68,8 +70,6 @@ Valid filters and includes for each method are detailed in the [API v2 docs](htt
 Services for the other models in the API are in the pipeline.
 
 N.B. This library is still a pre-1.0.0 WIP, please use accordingly!
-
-```
 
 ## Configuration
 
