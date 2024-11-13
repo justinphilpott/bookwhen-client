@@ -79,7 +79,7 @@ Required configuration options:
 
 API requests to the Bookwhen API are authenticated using Basic Authentication with the API Key as the username and a blank password.
 
-API keys can be generated in the [API tokens setup area of your Bookwhen account](https://admin.bookwhen.com/settings/api_access_permission_sets). (This will link to the API settings page in your Bookwhen account if have and are logged into your admin account)
+API keys can be generated in the [API tokens setup area of your Bookwhen account](https://admin.bookwhen.com/settings/api_access_permission_sets). (This will link to the API settings page in your Bookwhen account if you have one and are logged into your admin account)
 
 ## Contributing
 
