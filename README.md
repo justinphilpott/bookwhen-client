@@ -1,6 +1,6 @@
 # `@jphil/bookwhen-client`
 
-An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. Intended for server-side environments. \[wip\]!
+An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. \[wip\]!
 
 ## Table of Contents
 
