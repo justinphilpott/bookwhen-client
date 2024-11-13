@@ -1,6 +1,6 @@
 # `@jphil/bookwhen-client`
 
-An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. Intended for server-side environments. \[wip\]!
+An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. \[wip\]!
 
 ## Table of Contents
 
@@ -20,7 +20,7 @@ You'll likely be at least somewhat familiar with the [Bookwhen](https://www.book
 ## Features
 
 - Provides an easy way to pull your data from Bookwhen for NodeJS environments
-- Provides fully typed methods for each model (so far just the events model) in the Bookwhen API v2
+- Provides fully typed methods for each model (so far just the Events model) provided in the Bookwhen API v2
 
 ## Installation
 
@@ -32,28 +32,42 @@ pnpm add @jphil/bookwhen-client
 
 ## Usage
 
-!N.B. this usage structure may change as I progress towards a 1.0.0
-
 ```typescript
 // import the client factory
 import { createBookwhenClient } from '@jphil/bookwhen-client';
 
-// create the client (optional debug param to get requests logged to console)
-const client = createBookwhenClient({ apiKey: 'your-API-key'[, debug = true]});
+// create the client
+const client = createBookwhenClient({ 
+  apiKey: 'your-API-key',
+  debug: true  // Optional: enables request logging
+});
 
-// use events Service method to get a single event
-const event = client.events.getById({eventId: 'some-id'});
+// Get a single event
+const event = await client.events.getById({
+  eventId: 'some-id',
+  includes: ['location', 'tickets']  // Optional: include related resources
+});
 
 // get all events
-const events = client.events.getMultiple();
+const events = await client.events.getMultiple();
 
-// get all events in 2025
-const events_2025 = client.events.getMultiple({
-  filters: [
+// get all events in 2025 tagged with 'workshop'
+const events_2025 = await client.events.getMultiple({
+  filters: {  // Optional: filter by various 
     from: '20250101',
-    to: '20251231'
-  ]
+    to: '20251231',
+    tag: ['workshop']
+  },
+  includes: ['location']   // Optional: Include related resources
 });
+
+(N.B. Ensure you wrap the above statements in try/catch blocks to catch errors which could be thrown)
+
+Valid filters and includes for each method are detailed in the [API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml) 
+
+Services for the other models in the API are in the pipeline.
+
+N.B. This library is still a pre-1.0.0 WIP, please use accordingly!
 
 ```
 
@@ -73,14 +87,14 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 ## Roadmap
 
-- Keep up with any future changes or additions to the [Bookwhen API](https://api.bookwhen.com/v2), additions will be driven mainly by this.
-- Possibly add a "fields" param to service methods to allow response filtering
+- Proceed towards a 1.0.0 with community feedback.
+- Keep up with any future changes or additions to the [Bookwhen API](https://api.bookwhen.com/v2).
 
 ### Todos
+
+- [] create e2e test suite with github action workflow
 - [] put Zod in place in more areas to strengthen runtime type guards
-- [] flesh out e2e tests
 - [] write services for the other models in the API
-- [] create e2e test github action workflow
 
 ## License
 
