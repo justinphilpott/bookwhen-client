@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.2.5
+
+### Patch Changes
+
+- 1453f9d: fix for broken exports
+
 ## 0.2.4
 
 ### Patch Changes
