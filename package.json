@@ -3,7 +3,6 @@
   "version": "0.2.4",
   "description": "TypeScript client for the Bookwhen API (v2)",
   "private": false,
-  "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -80,5 +79,11 @@
   "dependencies": {
     "axios": "^1.7.7",
     "zod": "^3.23.8"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "module": "./dist/index.mjs"
+    }
   }
 }
