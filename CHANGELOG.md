@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.2.6
+
+### Patch Changes
+
+- 8fce1f2: Test fix for exports
+
 ## 0.2.5
 
 ### Patch Changes
