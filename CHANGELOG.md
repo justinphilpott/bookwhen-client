@@ -5,6 +5,7 @@
 ### Patch Changes
 
 - d692edc: tweak to fix build
+- 8fce1f2: Test fix for exports
 
 ## 0.2.5
 
