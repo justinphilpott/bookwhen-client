@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.2.6
+
+### Patch Changes
+
+- d692edc: tweak to fix build
+
 ## 0.2.5
 
 ### Patch Changes
