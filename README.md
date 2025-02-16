@@ -92,9 +92,7 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 ### Todos
 
-- [] create e2e test suite with github action workflow
-- [] put Zod in place in more areas to strengthen runtime type guards
-- [] write services for the other models in the API
+@see the issue queue.
 
 ## License
 
