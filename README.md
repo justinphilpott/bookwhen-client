@@ -70,7 +70,7 @@ Valid filters and includes for each method are detailed in the [API v2 docs](htt
 
 Services for the other models in the API are in the pipeline.
 
-N.B. This library is still a pre-1.0.0 WIP, please use accordingly!
+N.B. This library is still a pre-1.0.0 WIP, please use accordingly, and pls make issues for any bugs!
 
 ## Browser Usage Notes
 
@@ -100,9 +100,7 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 ### Todos
 
-- [] create e2e test suite with github action workflow
-- [] put Zod in place in more areas to strengthen runtime type guards
-- [] write services for the other models in the API
+@see the issue queue.
 
 ## License
 
