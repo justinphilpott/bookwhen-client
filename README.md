@@ -1,6 +1,6 @@
 # `@jphil/bookwhen-client`
 
-An API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in Typescript for NodeJS. \[wip\]!
+A universal API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in TypeScript for both NodeJS and browser environments.
 
 ## Table of Contents
 
@@ -19,7 +19,8 @@ You'll likely be at least somewhat familiar with the [Bookwhen](https://www.book
 
 ## Features
 
-- Provides an easy way to pull your data from Bookwhen for NodeJS environments
+- Provides an easy way to access Bookwhen API from both NodeJS and browsers
+- Browser-compatible with proper CORS handling
 - Provides fully typed methods for each model (so far just the Events model) provided in the Bookwhen API v2
 
 ## Installation
@@ -71,9 +72,16 @@ Services for the other models in the API are in the pipeline.
 
 N.B. This library is still a pre-1.0.0 WIP, please use accordingly!
 
+## Browser Usage Notes
+
+This client is designed to expose your Bookwhen API key to browsers. By design:
+- API keys are visible in client-side code
+- Only accesses public endpoints
+- No sensitive data exposure
+
 ## Configuration
 
-Required configuration options:
+Required configuration:
 
 - **apiKey**: Your Bookwhen API key (required)
 
