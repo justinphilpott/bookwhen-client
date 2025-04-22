@@ -14,12 +14,12 @@
     "noImplicitOverride": true,
     "module": "NodeNext",
     "outDir": "dist",
-    "rootDir": "src",
+    "rootDir": ".",
     "sourceMap": true,
     "declaration": true,
     "lib": ["ESNext", "dom"],
     "types": ["vitest"]
   },
-  "include": ["src/**/*"], 
+  "include": ["src/**/*", "tests/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

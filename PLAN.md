@@ -28,10 +28,21 @@
 - [x] Added browser-specific error detection and messages
 - [x] Implemented comprehensive error typing
 
-### [ ] 2.2 Testing Infrastructure
+### [ ] 2.2 Testing Infrastructure (Next Task)
 
-- [ ] Add Playwright config
-- [ ] Create basic browser test scenarios
+#### Playwright Setup
+- [ ] Create `playwright.config.ts` with base configuration
+- [ ] Add browser test directory (`tests/browser/`)
+- [ ] Configure CI to run browser tests
+
+#### Test Scenarios
+- [ ] Basic API calls
+- [ ] Error scenarios (CORS, network errors)
+- [ ] Cross-browser verification (Chrome, Firefox, Safari)
+
+#### Verification
+- [ ] Test on local browsers
+- [ ] Verify CI pipeline execution
 
 ## Phase 3 - Documentation & Release
 

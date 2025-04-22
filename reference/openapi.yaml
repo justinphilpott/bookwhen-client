@@ -1,0 +1,1102 @@
+openapi: 3.0.1
+info:
+  title: Bookwhen API
+  description: |
+    [Bookwhen.com](https://bookwhen.com) -- [JSON API](https://jsonapi.org/) for access to public event data.
+
+
+    API requests are authenticated using **Basic Authentication** with the `API Key` as the `username` and a **blank password**. An API can be generated in the [API tokens setup](https://admin.bookwhen.com/settings/api_access_permission_sets) area.
+
+
+    Example curl call to list accounts:
+
+
+    ```
+      curl "https://api.bookwhen.com/v2/events" -u 'zfjpyl69ffq2y4bpta6bk0029131:'
+    ```
+
+
+    Also see [alternative layout](http://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml) of API docs.
+  termsOfService: https://bookwhen.com/terms
+  contact:
+    email: support@bookwhen.com
+  version: 2.0.0
+  x-logo:
+    url: /images/svg/bookwhen_api_logo.svg
+    altText: Bookwhen logo
+servers:
+- url: https://api.bookwhen.com/v2
+tags:
+- name: Event
+  description: "The top level resource for an event - class, course, workshop. Single\
+    \ events in courses reference other associated events in the course."
+- name: Location
+  description: The location of an event as a geo-coordinate and an address.
+- name: Attachment
+  description: A file attached to an event.
+- name: Ticket
+  description: "A ticket that can be selected to book onto the event. Every even must\
+    \ have at least one ticket. Tickets can be group tickets for booking multiple\
+    \ people with a single ticket, and course tickets for booking onto a series of\
+    \ events with the single ticket."
+- name: ClassPass
+  description: "A class pass can be selected at the time of booking, to allow the\
+    \ pre-purchase of a number of bookings deferred until a later booking. Class passes\
+    \ are associated with particular events or ticket types."
+paths:
+  /events:
+    get:
+      tags:
+      - Event
+      summary: List events
+      description: |
+        Fetch events accessible by the API token.
+
+        Only events from today will be included by default, unless `from` is specified.
+      parameters:
+      - name: "filter[option]"
+        in: query
+        description: |
+          The filter parameter _option_ part is required and can be one of:
+
+          - `calendar`   - Restrict to events on the given calendars (schedule pages).
+          - `entry`      - Restrict to given entries.
+
+
+          - `location`   - Array of location slugs to include.
+          - `tag`        - Array of tag words to include.
+          - `title`      - Array of entry titles to search for.
+          - `detail`     - Array of entry details to search for.
+
+
+          - `from`       - Inclusive time to fetch events from in format `YYYYMMDD` or `YYYYMMDDHHMISS`. Defaults to today.
+          - `to`         - Non-inclusive time to fetch events until in format `YYYYMMDD` or `YYYYMMDDHHMISS`
+
+
+          - `compact`    - Boolean: Combine events in a course into a single virtual event.
+
+
+          Multiple filters can be combined and will result in an `AND` clause.
+
+          e.g.
+
+          ```
+          /v2/events?filter[from]=20200401&filter[to]=20200404
+          /v2/events?filter[tag]=tag%20one,tag%20two
+          /v2/events?filter[title]=advanced,pro&filter[detail]=masterclass
+
+          %20 is a space
+          ```
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: |
+          Additional related resources (as a comma separated list) to include in the response. Resources are side-loaded in the `included` part of the response.
+
+          _Includes-through_ can be referenced using a dot notation. eg. `tickets.events`
+
+          Options:
+
+            - location
+            - attachments
+            - tickets
+            - tickets.events
+            - tickets.class_passes
+
+          e.g.
+
+          ```
+          /v2/events?include=location,tickets.events
+          ```
+
+          **Note:** Use of includes will increase the response time, so should normally be used for individual event requests only.
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Array of results.
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  links:
+                    $ref: '#/components/schemas/IndexLinks'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - basicAuth: []
+  /events/{event_id}:
+    get:
+      tags:
+      - Event
+      summary: Retrieve a single event
+      description: Returns the event for the provided event ID.
+      parameters:
+      - name: event_id
+        in: path
+        description: ID of account to retrieve
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: |
+          Additional related resources (as a comma separated list) to include in the response. Resources are side-loaded in the `included` part of the response.
+
+          Includes through can be referenced using a dot notation. eg. `tickets.events`
+
+          Options:
+
+            - location
+            - attachments
+            - tickets
+            - tickets.events
+            - tickets.class_passes
+
+          e.g.
+
+          ```
+          /v2/events/{event_id}?include=location,tickets.events
+          ```
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Event'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/ResourceNotFound'
+      security:
+      - basicAuth: []
+  /tickets:
+    get:
+      tags:
+      - Ticket
+      summary: List tickets
+      description: Fetch tickets for the given event.
+      parameters:
+      - name: event
+        in: query
+        description: The ID of the event to list tickets for.
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: |
+          Additional related resources (as a comma separated list) to include in the response. Resources are side-loaded in the `included` part of the response.
+
+          Includes through can be referenced using a dot notation. eg. `events.location`
+
+          Options:
+
+            - class_passes
+            - events
+            - events.location
+            - events.tickets
+            - events.attachments
+
+          e.g.
+
+          ```
+          /v2/tickets?event=ev-smij-20200530100000&include=events.tickets
+          ```
+
+          **Note:** Use of includes will increase the response time, so should normally be used for individual ticket requests only.
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Array of results.
+                    items:
+                      $ref: '#/components/schemas/Ticket'
+                  links:
+                    $ref: '#/components/schemas/IndexLinks'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - basicAuth: []
+  /tickets/{ticket_id}:
+    get:
+      tags:
+      - Ticket
+      summary: Retrieve a single ticket
+      description: Returns the ticket for the provided ticket ID.
+      parameters:
+      - name: ticket_id
+        in: path
+        description: ID of ticket to retrieve
+        required: true
+        schema:
+          type: string
+      - name: include
+        in: query
+        description: |
+          Additional related resources (as a comma separated list) to include in the response. Resources are side-loaded in the `included` part of the response.
+
+          Includes through can be referenced using a dot notation. eg. `events.location`
+
+          Options:
+
+            - class_passes
+            - events
+            - events.location
+            - events.tickets
+            - events.attachments
+
+          e.g.
+
+          ```
+          /v2/tickets/{ticket_id}?include=events.tickets
+          ```
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Ticket'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/ResourceNotFound'
+      security:
+      - basicAuth: []
+  /locations:
+    get:
+      tags:
+      - Location
+      summary: List locations
+      description: Fetch locations for the given query params.
+      parameters:
+      - name: "filter[option]"
+        in: query
+        description: |
+          The filter parameter _option_ part is required and can be one of:
+
+          - `address_text`      - Restrict to locations containing the address text filter.
+          - `additional_info`   - Filter by the text contained in the additional info.
+
+          e.g.
+
+          ```
+          /v2/locations?filter[address_text]=San%20Francisco
+          ```
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Array of results.
+                    items:
+                      $ref: '#/components/schemas/Location'
+                  links:
+                    $ref: '#/components/schemas/IndexLinks'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - basicAuth: []
+  /locations/{location_id}:
+    get:
+      tags:
+      - Location
+      summary: Retrieve a single location
+      description: Returns the location for the provided location ID.
+      parameters:
+      - name: location_id
+        in: path
+        description: ID of location to retrieve
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Location'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/ResourceNotFound'
+      security:
+      - basicAuth: []
+  /attachments:
+    get:
+      tags:
+      - Attachment
+      summary: List attachments
+      description: Fetch attachments for the given query params.
+      parameters:
+      - name: "filter[option]"
+        in: query
+        description: |
+          The filter parameter _option_ part is required and can be one of:
+
+          - `title`       - Filter on the file title text.
+          - `file_name`   - Filter on the file name.
+          - `file_type`   - Filter on the file type.
+
+          e.g.
+
+          ```
+          /v2/attachments?filter[address_text]=San%20Francisco&filter[file_type]=pdf
+          ```
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Array of results.
+                    items:
+                      $ref: '#/components/schemas/Attachment'
+                  links:
+                    $ref: '#/components/schemas/IndexLinks'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - basicAuth: []
+  /attachments/{attachment_id}:
+    get:
+      tags:
+      - Attachment
+      summary: Retrieve a single attachment
+      description: Returns the attachment for the provided attachment ID.
+      parameters:
+      - name: attachment_id
+        in: path
+        description: ID of attachment to retrieve
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Attachment'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/ResourceNotFound'
+      security:
+      - basicAuth: []
+  /class_passes:
+    get:
+      tags:
+      - ClassPass
+      summary: List class passes
+      description: Fetch class passes for the given query params.
+      parameters:
+      - name: "filter[option]"
+        in: query
+        description: |
+          The filter parameter _option_ part is required and can be one of:
+
+          - `title`         - Filter on the title text of the pass.
+          - `detail`        - Filter on the details text.
+          - `usage_type`    - Filter on the type of the pass: `personal` or `any`.
+          - `cost`                      - Filter on the cost with an exact value or use a comparison operator. e.g. `filter[cost][gte]=2000`
+            - `gt`    - greater than
+            - `gte`   - greater than or equal
+            - `lt`    - less than
+            - `lte`   - less than or equal
+            - `eq`    - equal to
+          - `usage_allowance`           - Filter on pass usage allowance. This also accepts a comparison operator like cost.
+          - `use_restricted_for_days`   - Filter on pass days restriction. This also accepts a comparison operator like cost.
+
+          e.g.
+
+          ```
+          /v2/class_passes?filter[title]=gold
+          /v2/class_passes?filter[cost]=2500
+          /v2/class_passes?filter[cost][gte]=2000&filter[cost][lt]=3000
+          ```
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: Array of results.
+                    items:
+                      $ref: '#/components/schemas/ClassPass'
+                  links:
+                    $ref: '#/components/schemas/IndexLinks'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+      security:
+      - basicAuth: []
+  /class_passes/{class_pass_id}:
+    get:
+      tags:
+      - ClassPass
+      summary: Retrieve a single class pass
+      description: Returns the class pass for the provided class pass ID.
+      parameters:
+      - name: class_pass_id
+        in: path
+        description: ID of class pass to retrieve
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ClassPass'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/ResourceNotFound'
+      security:
+      - basicAuth: []
+components:
+  schemas:
+    IndexLinks:
+      type: object
+      properties:
+        self:
+          type: string
+          description: URL for the current page of data in the results array.
+          example: "https://api.bookwhen.com/v2/{resource_plural}?page[offset]=40"
+        first:
+          type: string
+          description: URL for the first page of data in the results array.
+          example: "https://api.bookwhen.com/v2/{resource_plural}"
+        prev:
+          type: string
+          description: URL for the previous page of data in the results array.
+          example: "https://api.bookwhen.com/v2/{resource_plural}?page[offset]=20"
+        next:
+          type: string
+          description: URL for the next page of data in the results array.
+          example: "https://api.bookwhen.com/v2/{resource_plural}?page[offset]=60"
+      description: Links to current and offset pages in the results set. Elements
+        are only included when relevant.
+    EventRef:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: ev-sboe-20200320100000
+        type:
+          type: string
+          description: The type of this resource.
+          example: event
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for this resource.
+          example: ev-sboe-20200320100000
+        type:
+          type: string
+          description: The type of this resource.
+          example: event
+        attributes:
+          type: object
+          properties:
+            title:
+              type: string
+              description: The title of the event.
+              example: The incredible event
+            details:
+              type: string
+              description: A longer description of the event.
+              example: For testing
+            all_day:
+              type: boolean
+              description: Indicates if the event is shown as a full day in the schedule
+                (without a time element). This is often used for multi-day events.
+              example: false
+            start_at:
+              type: string
+              description: The start date and time (unless set as all day) of the
+                event.
+              format: date-time
+              example: 2020-01-11T10:00:00Z
+            end_at:
+              type: string
+              description: The end date and time (unless set as all day) of the event.
+              format: date-time
+              example: 2020-01-11T10:00:00Z
+            attendee_limit:
+              type: integer
+              description: The maximum number of attendees that can be booked onto
+                the event.
+              example: 25
+            attendee_count:
+              type: integer
+              description: The current number of attendees booked onto the event.
+              example: 17
+            waiting_list:
+              type: boolean
+              description: Is there a waiting list on this event?
+              example: true
+            max_tickets_per_booking:
+              type: integer
+              description: How many tickets can be booked simultaneously in a single
+                checkout session.
+              example: 5
+            tags:
+              type: array
+              description: "A list of tag words assigned to this event, used for filtering\
+                \ and assignment."
+              items:
+                type: string
+                description: A tag word.
+                example: thing-one
+            event_image:
+              type: object
+              properties:
+                image_url:
+                  type: string
+                  format: url
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/Hero13.jpg
+                alt_ratio_16x9_1x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_16x9_1x_Hero13.jpg
+                alt_ratio_16x9_2x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_16x9_2x_Hero13.jpg
+                alt_ratio_16x9_3x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_16x9_3x_Hero13.jpg
+                alt_ratio_4x3_1x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_4x3_1x_Hero13.jpg
+                alt_ratio_4x3_2x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_4x3_2x_Hero13.jpg
+                alt_ratio_4x3_3x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_4x3_3x_Hero13.jpg
+                alt_ratio_1x1_1x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_1x1_1x_Hero13.jpg
+                alt_ratio_1x1_2x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_1x1_2x_Hero13.jpg
+                alt_ratio_1x1_3x_url:
+                  type: string
+                  example: https://d3vytqo793z7ur.cloudfront.net/attachments/amplt327zhcc/gx5xbe4scgb4/processed/g9z3vseolvhu/alt_ratio_1x1_3x_Hero13.jpg
+              description: The URLs for the image for the event in various formats.
+          description: Attributes for this resource.
+        relationships:
+          type: object
+          properties:
+            location:
+              type: object
+              properties:
+                data:
+                  $ref: '#/components/schemas/LocationRef'
+                links:
+                  type: object
+                  properties:
+                    related:
+                      type: string
+                      description: The URL to return the related resource of this
+                        type for the top level resource.
+                      example: https://api.bookwhen.com/v2/events/ev-sboe-20200320100000/location
+                    self:
+                      type: string
+                      description: The URL to return the data value for this relationship.
+                      example: https://api.bookwhen.com/v2/events/ev-sboe-20200320100000/relationships/location
+                  description: Links for this relationship.
+              description: The location associated with this event.
+            attachments:
+              type: object
+              properties:
+                data:
+                  type: array
+                  description: Data for this relationship.
+                  items:
+                    $ref: '#/components/schemas/AttachmentRef'
+                links:
+                  type: object
+                  properties:
+                    related:
+                      type: string
+                      description: The URL to return the related resources of this
+                        type for the top level resource.
+                      example: https://api.bookwhen.com/v2/events/ev-sboe-20200320100000/attachments
+                    self:
+                      type: string
+                      description: The URL to return the data values for this relationship.
+                      example: https://api.bookwhen.com/v2/events/ev-sboe-20200320100000/relationships/attachments
+                  description: Links for this relationship.
+              description: The attachments associated with this event.
+            tickets:
+              type: object
+              properties:
+                data:
+                  type: array
+                  description: Data for this relationship.
+                  items:
+                    $ref: '#/components/schemas/TicketRef'
+                links:
+                  type: object
+                  properties:
+                    related:
+                      type: string
+                      description: The URL to return the related resources of this
+                        type for the top level resource.
+                      example: https://api.bookwhen.com/v2/events/ev-sboe-20200320100000/tickets
+                    self:
+                      type: string
+                      description: The URL to return the data values for this relationship.
+                      example: https://api.bookwhen.com/v2/events/ev-sboe-20200320100000/relationships/tickets
+                  description: Links for this relationship.
+              description: The tickets available on this event.
+          description: Related resources.
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              description: The URL to return the current resource.
+              example: https://api.bookwhen.com/v2/events/ev-sboe-20200320100000
+          description: Links for this resource.
+        included:
+          type: array
+          description: An array of all related resources requested to be included
+            in the query parameters.
+          items:
+            type: object
+            properties: {}
+    LocationRef:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: sjm7pskr31t3
+        type:
+          type: string
+          description: The type of this resource.
+          example: location
+      description: Data for this relationship.
+    Location:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: sjm7pskr31t3
+        type:
+          type: string
+          description: The type of this resource.
+          example: location
+        attributes:
+          type: object
+          properties:
+            address_text:
+              type: string
+              description: The postal address of the location.
+              example: Buckingham Palace\nLondon\nSW1A 1AA
+            additional_info:
+              type: string
+              description: Any additional details about the location.
+              example: The London residence of the Queen.
+            latitude:
+              type: number
+              description: Latitude
+              example: 51.501364
+            longitude:
+              type: number
+              description: Longitude
+              example: -0.14189
+            zoom:
+              type: integer
+              description: The Google maps zoom level as set by the admin.
+              example: 15
+            map_url:
+              type: string
+              description: The URL for the static Google maps image of the location.
+              example: https://d3vytqo793z7ur.cloudfront.net/maps/amplt327zhcc/o4pgtyi38gk1/staticmap.png?v=20201228163529
+          description: Attributes for this resource.
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              description: The URL to return the current resource.
+              example: https://api.bookwhen.com/v2/locations/sjm7pskr31t3
+          description: Links for this resource.
+    AttachmentRef:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: 9v06h1cbv0en
+        type:
+          type: string
+          description: The type of this resource.
+          example: attachment
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: 9v06h1cbv0en
+        type:
+          type: string
+          description: The type of this resource.
+          example: attachment
+        attributes:
+          type: object
+          properties:
+            title:
+              type: string
+              description: The name given to the file (defaulted to the file name).
+              example: My Photo
+            file_url:
+              type: string
+              description: The URL for accessing the file. This should be used instead
+                of the forwarded URL due to file access policies.
+              example: https://files.bookwhen.com/amplt327zhcc/9v06h1cbv0en/uploaded_file
+            file_size_bytes:
+              type: string
+              description: The size of the file in bytes.
+              example: "47070"
+            file_size_text:
+              type: string
+              description: The human readable form of the file size.
+              example: 46 KB
+            file_name:
+              type: string
+              description: The file name as it was at the time of upload.
+              example: image.jpg
+            file_type:
+              type: string
+              description: The type of the file.
+              example: image
+            content_type:
+              type: string
+              description: The file content type as a MIME string.
+              example: image/jpeg
+          description: Attributes for this resource.
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              description: The URL to return the current resource.
+              example: https://api.bookwhen.com/v2/attachments/9v06h1cbv0en
+          description: Links for this resource.
+    TicketRef:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: ti-sboe-20200320100000-tk1m
+        type:
+          type: string
+          description: The type of this resource.
+          example: ticket
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for this resource.
+          example: ti-sboe-20200320100000-tk1m
+        type:
+          type: string
+          description: The type of this resource.
+          example: ticket
+        attributes:
+          type: object
+          properties:
+            title:
+              type: string
+              description: The name given to this type of ticket.
+              example: Single ticket
+            details:
+              type: string
+              description: Additional details for this type of ticket.
+              example: More details about the ticket etc.
+            number_issued:
+              type: number
+              description: The total number of this type of ticket issued. If null
+                then no limit has been set.
+              example: 10.0
+            number_taken:
+              type: number
+              description: the number of tickets of this type that have been booked
+                (or currently reserved in checkout) for this event.
+              example: 7.0
+            course_ticket:
+              type: boolean
+              description: Indicates whether this ticket is a course ticket. Course
+                tickets book the attendee(s) onto all grouped events in the same booking.
+              example: false
+            group_ticket:
+              type: boolean
+              description: Indicates whether this ticket is for a group of attendees
+                (multiple people booked using a single ticket).
+              example: false
+            group_min:
+              type: number
+              description: The minimum number of people attending with this ticket.
+              example: 3.0
+            group_max:
+              type: number
+              description: The maximum number of people attending with this ticket.
+              example: 5.0
+            available:
+              type: boolean
+              description: Indiates if the ticket is available for selection according
+                to the available from and to restrictions.
+              example: true
+            available_from:
+              type: string
+              description: The time this ticket will become available for selection.
+                Null if there's no restriction.
+              format: date-time
+              example: 2020-01-11T10:00:00Z
+            available_to:
+              type: string
+              description: The time this ticket will no longer be available for selection.
+                Null if there's no restriction.
+              format: date-time
+              example: 2020-01-20T10:00:00Z
+            cost:
+              type: object
+              properties:
+                currency_code:
+                  type: string
+                  description: ISO value for currency type.
+                  example: USD
+                net:
+                  type: number
+                  description: Cost (excluding tax) stated in the currency smallest
+                    units. eg. 1000 is $10.
+                  example: 1000.0
+                tax:
+                  type: number
+                  description: Amount of tax in addition to the net cost.
+                  example: 0.0
+              description: The cost of purchasing this ticket.
+            built_basket_iframe_url:
+              type: string
+              description: The URL for a direct selection to basket and redirect to
+                the basket overview page (in an iframe).
+              example: /pagecode/iframe/basket_items/apply?basket_item_ids%5Bti-sboe-20200320100000-tk1m%5D=1
+            built_basket_url:
+              type: string
+              description: The URL for a direct selection to basket and redirect to
+                the basket overview page.
+              example: /pagecode/basket_items/apply?basket_item_ids%5Bti-sboe-20200320100000-tk1m%5D=1
+          description: Attributes for this resource.
+        relationships:
+          type: object
+          properties:
+            events:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/EventRef'
+                links:
+                  type: object
+                  properties:
+                    related:
+                      type: string
+                      description: The URL to return the related resource of this
+                        type for the top level resource.
+                      example: https://api.bookwhen.com/v2/tickets/ti-sboe-20200320100000-tk1m/events
+                    self:
+                      type: string
+                      description: The URL to return the data value for this relationship.
+                      example: https://api.bookwhen.com/v2/tickets/ti-sboe-20200320100000-tk1m/relationships/events
+                  description: Links for this relationship.
+              description: "Events associated with this ticket. If it's a course ticket,\
+                \ then this lists all events in the course."
+            class_passes:
+              type: object
+              properties:
+                data:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ClassPassRef'
+                links:
+                  type: object
+                  properties:
+                    related:
+                      type: string
+                      description: The URL to return the related resource of this
+                        type for the top level resource.
+                      example: https://api.bookwhen.com/v2/tickets/ti-sboe-20200320100000-tk1m/class_passes
+                    self:
+                      type: string
+                      description: The URL to return the data value for this relationship.
+                      example: https://api.bookwhen.com/v2/tickets/ti-sboe-20200320100000-tk1m/relationships/class_passes
+                  description: Links for this relationship.
+              description: Class passes that are eligible for use with this ticket.
+          description: Related resources.
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              description: The URL to return the current resource.
+              example: https://api.bookwhen.com/v2/tickets/ti-sboe-20200320100000-tk1m
+          description: Links for this resource.
+        included:
+          type: array
+          description: An array of all related resources requested to be included
+            in the query parameters.
+          items:
+            type: object
+            properties: {}
+    ClassPassRef:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: cp-vk3x1brhpsbf
+        type:
+          type: string
+          description: The type of this resource.
+          example: class_pass
+    ClassPass:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique ID code for the this resource.
+          example: cp-vk3x1brhpsbf
+        type:
+          type: string
+          description: The type of this resource.
+          example: class_pass
+        attributes:
+          type: object
+          properties:
+            title:
+              type: string
+              description: The name given to the class pass.
+              example: Studio pass
+            details:
+              type: string
+              description: Additional information about the class pass.
+              example: Some more information...
+            usage_allowance:
+              type: integer
+              description: The number of classes the pass can be used on.
+              example: 10
+            usage_type:
+              type: string
+              description: "The type of this pass. 'personal' for use only by the\
+                \ booker, or 'any' for use on additional attendees on the booking\
+                \ also."
+              example: personal
+            number_available:
+              type: integer
+              description: States the number of passes available if a limit has been
+                set. Null otherwise.
+              example: 20
+            use_restricted_for_days:
+              type: integer
+              description: "Indicates if the pass has a restriction on the time period\
+                \ it can be used for, starting from the time of the first booked event.\
+                \ Null if there's no restriction."
+              example: 60
+          description: Attributes for this resource.
+        links:
+          type: object
+          properties:
+            self:
+              type: string
+              description: The URL to return the current resource.
+              example: https://api.bookwhen.com/v2/class_passes/cp-vk3x1brhpsbf
+          description: Links for this resource.
+  responses:
+    ResourceNotFound:
+      description: Resource not found
+      content: {}
+    InvalidParameters:
+      description: Validation failed
+      content: {}
+    Unauthorized:
+      description: Action not authorised
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+      content: {}
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+x-original-swagger-version: "2.0"

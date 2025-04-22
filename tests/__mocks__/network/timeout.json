@@ -1,0 +1,12 @@
+{
+    "request": {
+        "method": "GET",
+        "path": "/events",
+        "timeout": 5000
+    },
+    "response": null,
+    "error": {
+        "type": "timeout",
+        "message": "Request timed out after 5000ms"
+    }
+}

@@ -72,7 +72,33 @@ Services for the other models in the API are in the pipeline.
 
 N.B. This library is still a pre-1.0.0 WIP, please use accordingly, and pls make issues for any bugs!
 
-## Error Handling
+## Error Handling (Cross-Platform)
+
+The library provides comprehensive error handling that works consistently in both Node.js and browser environments:
+
+### Error Types
+- `NETWORK_ERROR`: Failed API communication
+- `SECURITY_ERROR`: Browser security restrictions (CORS, etc)
+- `API_ERROR`: Bookwhen API returned error response  
+- `CONFIG_ERROR`: Invalid client configuration
+- `UNKNOWN_ERROR`: Unhandled error case
+
+All errors include:
+- `code`: Error type identifier
+- `message`: Human-readable description
+- `isBrowser`: Boolean indicating browser environment
+- `context`: Additional details including timestamp
+
+```typescript
+try {
+  await client.events.getById({eventId: 'invalid-id'});
+} catch (error) {
+  if (error.code === 'SECURITY_ERROR') {
+    // Handle CORS/browser security issues
+  }
+  // Other error handling...
+}
+```
 
 The library provides comprehensive error handling that works in both Node.js and browser environments:
 

@@ -70,6 +70,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "husky": "^9.1.6",
+    "msw": "^2.7.5",
     "playwright": "^1.52.0",
     "prettier": "^3.3.3",
     "tsup": "^8.3.4",
