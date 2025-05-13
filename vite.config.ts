@@ -7,10 +7,13 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   server: {
-    port: 3000,
-    open: true,
-  },
-  test: {
+      port: 3000,
+      open: true,
+      watch: {
+        ignored: ['**/tests/browser/**'],
+      },
+    },
+    test: {
     globals: true,
     environment: 'node',
     mockReset: true,
@@ -27,7 +30,10 @@ export default defineConfig({
         '**/*.{spec,test}.{js,ts,jsx,tsx}'
       ]
     },
-    exclude: [...configDefaults.exclude],
+    exclude: [
+      ...configDefaults.exclude,
+      '**/tests/browser/**' // Exclude Playwright browser tests
+    ],
   },
   resolve: {
     alias: {

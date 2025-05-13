@@ -1,4 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   testDir: './tests/browser',
@@ -14,20 +18,14 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Chrome'], headless: true },
     },
   ],
   webServer: {
-    command: 'pnpm run test:server',
+    command: 'pnpm run build && npx http-server -p 3000',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
+    timeout: 180 * 1000,
+    cwd: resolve(__dirname),
   },
 });

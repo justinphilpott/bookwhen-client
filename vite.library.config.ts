@@ -14,13 +14,14 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/index.ts',
-      name: 'BookwhenClient',
       fileName: (format) => `index.${format}.js`,
-      formats: ['es', 'umd']
+      formats: ['es']
     },
     rollupOptions: {
-      external: ['axios', 'zod'],
+      external: ['axios', 'zod'], // Ensure dependencies are external
       output: {
+        // globals are mainly for UMD/IIFE with externals, less relevant here
+        // but harmless to keep for now.
         globals: {
           axios: 'axios',
           zod: 'zod'
