@@ -175,8 +175,6 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 
 [refining]
 
-Development workflow for NPM package:
-
 From main branch on local:
 - Pull latest code
 - git checkout -b some-new-branch
