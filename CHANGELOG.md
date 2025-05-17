@@ -1,7 +1,29 @@
 # @jphil/bookwhen-client
 
+## 0.3.0
+
+### Minor Changes
+
+- feat: Standardize ESM build and enhance browser compatibility/testing
+
+  This update refactors the library to produce a clean, ESM-only build, improving compatibility and developer experience for both Node.js and browser environments.
+
+  Key changes include:
+
+  - **Build System:** Vite configuration updated to output only an ES module. `axios` and `zod` are now correctly externalized as peer dependencies.
+  - **Dependency Management:** `axios` and `zod` are declared as `peerDependencies` and moved to `devDependencies` in `package.json`.
+  - **Playwright Testing:**
+    - Browser tests now use dynamic ESM imports of the library.
+    - Implemented import maps in the test harness to resolve external dependencies (`axios`, `zod`) in the browser test environment.
+    - Integrated Mock Service Worker (MSW) via `playwright-msw` for robust API mocking in browser tests, replacing `page.route()`.
+  - **CI Pipeline:** GitHub Actions workflow updated to include Playwright browser tests and ensure Vitest unit/integration tests run separately.
+  - **Documentation:** `README.md` updated to clarify ESM usage, peer dependencies, and browser consumption (with/without bundlers).
+  - **Workspace Configuration:** Corrected `pnpm-workspace.yaml` and ensured `pnpm-lock.yaml` is consistent.
+
 ## [Unreleased]
+
 ### Added
+
 - Cross-platform error handling system
 - Browser environment detection in errors
 - Comprehensive error typing and context
