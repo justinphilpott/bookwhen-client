@@ -1,0 +1,7 @@
+packages:
+  - '.'
+
+# onlyBuiltDependencies:
+#   - msw
+# Uncomment the above if msw truly needs to be built from source.
+# For now, focusing on fixing the missing 'packages' field.

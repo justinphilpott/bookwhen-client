@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bookwhen Client Test Harness</title>
+  <script type="importmap">
+  {
+    "imports": {
+      "axios": "/node_modules/axios/dist/esm/axios.js",
+      "zod": "/node_modules/zod/lib/index.mjs"
+    }
+  }
+  </script>
+  <!-- The test script (/dist/index.es.js) will be imported dynamically 
+       by Playwright's page.evaluate in client.spec.ts -->
+</head>
+<body>
+  <div id="test-root"></div>
+</body>
+</html>

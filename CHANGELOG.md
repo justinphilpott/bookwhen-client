@@ -1,5 +1,12 @@
 # @jphil/bookwhen-client
 
+## [Unreleased]
+### Added
+- Cross-platform error handling system
+- Browser environment detection in errors
+- Comprehensive error typing and context
+- Enhanced test coverage for error cases
+
 ## 0.2.6
 
 ### Patch Changes

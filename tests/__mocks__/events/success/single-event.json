@@ -1,0 +1,67 @@
+{
+    "data": {
+      "id": "ev-sny5-20250427110000",
+      "type": "event",
+      "attributes": {
+        "title": "Thai massage session",
+        "start_at": "2025-04-27T11:00:00.000+01:00",
+        "end_at": "2025-04-27T13:00:00.000+01:00",
+        "cancelled_at": null,
+        "cancellation_message": null,
+        "max_tickets_per_booking": 1,
+        "details": "A Thai massage session of approximately 2 hours, might be a little more or less - I don't work strictly to the clock, but rather to what I feel.\r\n\r\nTo read more about what to expect, have a look at: https://www.moving-stillness.com/thaimassage/treatments/\r\n\r\nIf you have any questions at all about TM sessions, do feel free to reach out at any time: https://www.moving-stillness.com/contact",
+        "attendee_instructions": "- Please wear flexible clothing, with a warm option. (There is good heating and plenty of blankets available if needed so you definitely won't be cold)\r\n- Ideally eat lightly on the day and try to leave some hours before and after the session where you only drink water/fluids. \r\n- As part of the booking process there is a medical conditions field to fill out - please be thorough with this (we'll discuss this at the start of your session)\r\n  ",
+        "all_day": false,
+        "attendee_limit": 1,
+        "attendee_count": 0,
+        "waiting_list": false,
+        "tags": [
+          "coldean",
+          "session"
+        ],
+        "event_image": {
+          "image_url": "https://dlaqljgi7pm30.cloudfront.net/attachments/umdvs4p6ec22/oegtsedjinb8/processed/i9o62u7uf9a2/8d_shoulder.jpg",
+          "alt_ratio_16x9_1x_url": "https://dlaqljgi7pm30.cloudfront.net/attachments/umdvs4p6ec22/oegtsedjinb8/processed/i9o62u7uf9a2/alt_ratio_16x9_1x_8d_shoulder.jpg",
+          "alt_ratio_16x9_2x_url": "https://dlaqljgi7pm30.cloudfront.net/attachments/umdvs4p6ec22/oegtsedjinb8/processed/i9o62u7uf9a2/alt_ratio_16x9_2x_8d_shoulder.jpg",
+          "alt_ratio_16x9_3x_url": "https://dlaqljgi7pm30.cloudfront.net/attachments/umdvs4p6ec22/oegtsedjinb8/processed/i9o62u7uf9a2/alt_ratio_16x9_3x_8d_shoulder.jpg",
+          "alt_ratio_4x3_1x_url": "https://dlaqljgi7pm30.cloudfront.net/attachments/umdvs4p6ec22/oegtsedjinb8/processed/i9o62u7uf9a2/alt_ratio_4x3_1x_8d_shoulder.jpg",
+          "alt_ratio_4x3_2x_url": "https://dlaqljgi7pm30.cloudfront.net/attachments/umdvs4p6ec22/oegtsedjinb8/processed/i9o62u7uf9a2/alt_ratio_4x3_2x_8d_shoulder.jpg",
+          "alt_ratio_4x3_3x_url": null,
+          "alt_ratio_1x1_1x_url": "https://dlaqljgi7pm30.cloudfront.net/attachments/umdvs4p6ec22/oegtsedjinb8/processed/i9o62u7uf9a2/alt_ratio_1x1_1x_8d_shoulder.jpg",
+          "alt_ratio_1x1_2x_url": null,
+          "alt_ratio_1x1_3x_url": null
+        }
+      },
+      "relationships": {
+        "location": {
+          "data": null,
+          "links": {
+            "related": "https://api.bookwhen.com/v2/events/ev-sny5-20250427110000/location",
+            "self": "https://api.bookwhen.com/v2/events/ev-sny5-20250427110000/relationships/location"
+          }
+        },
+        "attachments": {
+          "data": [],
+          "links": {
+            "related": "https://api.bookwhen.com/v2/events/ev-sny5-20250427110000/attachments",
+            "self": "https://api.bookwhen.com/v2/events/ev-sny5-20250427110000/relationships/attachments"
+          }
+        },
+        "tickets": {
+          "data": [
+            {
+              "id": "ti-sny5-20250427110000-tkfmc",
+              "type": "ticket"
+            }
+          ],
+          "links": {
+            "related": "https://api.bookwhen.com/v2/events/ev-sny5-20250427110000/tickets",
+            "self": "https://api.bookwhen.com/v2/events/ev-sny5-20250427110000/relationships/tickets"
+          }
+        }
+      },
+      "links": {
+        "self": "https://api.bookwhen.com/v2/events/ev-sny5-20250427110000"
+      }
+    }
+  }

@@ -1,3 +1,7 @@
 node_modules
 dist
 coverage
+
+# Test reports and results
+playwright-report/
+test-results/

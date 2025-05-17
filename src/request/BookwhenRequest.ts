@@ -71,7 +71,7 @@ export class BookwhenRequest {
    */
   public addIncludes(includes: Resources): BookwhenRequest {
     try {
-      const validIncludes = includes.filter((include) => include.length > 0);
+      const validIncludes = includes.filter((include: string) => include.length > 0);
       if (validIncludes.length !== includes.length) {
         throw new Error('Invalid includes');
       }

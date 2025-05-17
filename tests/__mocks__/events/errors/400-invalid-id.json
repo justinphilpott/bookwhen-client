@@ -1,0 +1,14 @@
+{
+  "jsonapi": {
+    "version": "1.0"
+  },
+  "errors": [
+    {
+      "code": "NOT_FOUND",
+      "status": 404,
+      "title": "Resource not found",
+      "detail": "The requested resource could not be found.",
+      "help_url": "https://api.bookwhen.com/v2"
+    }
+  ]
+}

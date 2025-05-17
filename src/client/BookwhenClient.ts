@@ -11,6 +11,7 @@ import { CLIENT_HTTP_STATUS_CODES } from '../request/httpStatusCodes.js';
  */
 export class BookwhenClient {
   private eventService?: EventService;
+  private readonly isBrowser: boolean;
 
   /**
    * Creates a new instance of the BookwhenClient class.
@@ -18,6 +19,7 @@ export class BookwhenClient {
    * @throws Error if axiosInstance is not provided.
    */
   constructor(private axiosInstance: AxiosInstance) {
+    this.isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
     if (!axiosInstance) {
       throw new Error('BookwhenClient - you must provide an axios instance');
     }
@@ -58,6 +60,10 @@ export function createBookwhenClient(options: BookwhenClientOptions): BookwhenCl
     baseURL: baseURL,
     auth: { username: apiKey, password: '' },
   });
+
+  if (typeof window !== 'undefined' && typeof window.document !== 'undefined') {
+    axiosInstance.defaults.withCredentials = true;
+  }
 
   axiosInstance.interceptors.response.use(
     (response) => response,
