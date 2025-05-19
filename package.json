@@ -3,9 +3,17 @@
   "version": "0.3.0",
   "description": "TypeScript client for the Bookwhen API (v2)",
   "private": false,
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "scripts": {
     "prepare": "pnpm husky install",
     "dev": "vitest",
@@ -33,7 +41,6 @@
     "booking",
     "api client"
   ],
-  "type": "module",
   "author": {
     "name": "Justin Philpott",
     "email": "justin@jphil.dev"
@@ -95,15 +102,5 @@
     "axios": "^1.7.0",
     "zod": "^3.23.0"
   },
-  "dependencies": {},
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "browser": "./dist/index.es.js",
-      "node": "./dist/index.js",
-      "import": "./dist/index.es.js",
-      "default": "./dist/index.es.js"
-    }
-  },
-  "browser": "./dist/index.es.js"
+  "dependencies": {}
 }
