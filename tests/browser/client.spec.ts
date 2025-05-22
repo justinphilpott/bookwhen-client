@@ -69,3 +69,32 @@ test('should fetch events', async ({ page, worker }) => {
   expect(eventsData[0].id).toBe('ev-sny5-20250427110000'); // Updated to match MSW mock data
   expect((eventsData[0] as any).relationships?.location).toBeDefined();
 });
+
+test('should fetch a single event by ID', async ({ page }) => {
+  await page.goto('/tests/browser/test-harness.html');
+  await page.waitForFunction(() => typeof window.createBookwhenClient === 'function');
+
+  const eventData = await page.evaluate(async () => {
+    try {
+      const createBookwhenClient = window.createBookwhenClient;
+      if (typeof createBookwhenClient !== 'function') {
+        throw new Error('createBookwhenClient not available on window');
+      }
+      const client = createBookwhenClient({
+        apiKey: 'test-key',
+      });
+
+      return client.events.getById({
+        eventId: 'ev-sny5-20250427110000', // Assuming this ID exists in mock data
+        includes: ['location']
+      });
+    } catch (e) {
+      console.error('Error in fetch single event test evaluation:', e);
+      throw e;
+    }
+  });
+
+  expect(eventData).toBeDefined();
+  expect(eventData.id).toBe('ev-sny5-20250427110000');
+  expect((eventData as any).relationships?.location).toBeDefined();
+});
