@@ -32,8 +32,9 @@ pnpm add @jphil/bookwhen-client
 ```
 
 As `axios` and `zod` are peer dependencies, ensure they are also installed in your project:
+
 ```bash
-pnpm add axios zod 
+pnpm add axios zod
 # or npm install axios zod
 # or yarn add axios zod
 ```
@@ -47,15 +48,15 @@ This library is distributed as an ES module. The following usage pattern applies
 import { createBookwhenClient } from '@jphil/bookwhen-client';
 
 // create the client
-const client = createBookwhenClient({ 
+const client = createBookwhenClient({
   apiKey: 'your-API-key',
-  debug: true  // Optional: enables request logging
+  debug: true, // Optional: enables request logging
 });
 
 // Get a single event
 const event = await client.events.getById({
   eventId: 'some-id',
-  includes: ['location', 'tickets']  // Optional: include related resources
+  includes: ['location', 'tickets'], // Optional: include related resources
 });
 
 // get all events
@@ -63,19 +64,19 @@ const events = await client.events.getMultiple();
 
 // get all events in 2025 tagged with 'workshop'
 const events_2025 = await client.events.getMultiple({
-  filters: {  // Optional: filter by various 
+  filters: {
+    // Optional: filter by various
     from: '20250101',
     to: '20251231',
-    tag: ['workshop']
+    tag: ['workshop'],
   },
-  includes: ['location']   // Optional: Include related resources
+  includes: ['location'], // Optional: Include related resources
 });
-
 ```
 
 (N.B. Ensure you wrap the above statements in try/catch blocks to catch errors which could be thrown)
 
-Valid filters and includes for each method are detailed in the [API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml) 
+Valid filters and includes for each method are detailed in the [API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml)
 
 Services for the other models in the API are in the pipeline.
 
@@ -93,34 +94,40 @@ If you are using a JavaScript bundler (like Webpack, Rollup, Vite, Parcel, etc.)
 import { createBookwhenClient } from '@jphil/bookwhen-client';
 // ... rest of your code
 ```
+
 Ensure that `axios` and `zod` are also installed in your project, as they are peer dependencies. Your bundler will typically handle resolving these.
 
 ### Directly with `<script type="module">` (Advanced)
 
 For direct usage in a browser via `<script type="module">` without a bundler, you will need to:
+
 1. Ensure ES module versions of `axios` and `zod` are accessible to your page (e.g., served locally or via a CDN).
 2. Use an [import map](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) to tell the browser how to resolve the module specifiers for `@jphil/bookwhen-client`, `axios`, and `zod`.
 
 Example import map:
+
 ```html
 <script type="importmap">
-{
-  "imports": {
-    "@jphil/bookwhen-client": "/node_modules/@jphil/bookwhen-client/dist/index.es.js",
-    "axios": "/node_modules/axios/dist/esm/axios.js", 
-    "zod": "/node_modules/zod/lib/index.mjs" 
+  {
+    "imports": {
+      "@jphil/bookwhen-client": "/node_modules/@jphil/bookwhen-client/dist/index.es.js",
+      "axios": "/node_modules/axios/dist/esm/axios.js",
+      "zod": "/node_modules/zod/lib/index.mjs"
+    }
   }
-}
 </script>
 <script type="module">
   import { createBookwhenClient } from '@jphil/bookwhen-client';
   // ...
 </script>
 ```
+
 Note: The exact paths in the import map will depend on how you serve these dependencies. Usage with a bundler is generally simpler for browser projects.
 
 ### Important Note on API Keys in Client-Side Usage
-When using this library in a browser (client-side), your Bookwhen API key will necessarily be included in the client-side code and thus visible. 
+
+When using this library in a browser (client-side), your Bookwhen API key will necessarily be included in the client-side code and thus visible.
+
 - It is crucial to use an API key that has the minimum necessary permissions for the operations you intend to perform from the client-side.
 - This library enables access to Bookwhen API endpoints based on the permissions granted to the API key you provide.
 
@@ -135,6 +142,7 @@ The library provides comprehensive error handling that works consistently in bot
 - `timestamp`: The time the error occurred.
 
 ### Error Types
+
 - `NETWORK_ERROR`: Indicates a failure in API communication (e.g., DNS resolution, connection refused).
 - `SECURITY_ERROR`: Specific to browsers, indicates security restrictions prevented API access (e.g., CORS issues not handled by the server, mixed content).
 - `API_ERROR`: The Bookwhen API returned an error response (e.g., 4xx or 5xx status code). The `context` may include `statusCode` and `responseData`.
@@ -142,10 +150,12 @@ The library provides comprehensive error handling that works consistently in bot
 - `UNKNOWN_ERROR`: An unexpected error occurred within the library.
 
 Example:
+
 ```typescript
 try {
-  await client.events.getById({eventId: 'invalid-id'});
-} catch (error: any) { // It's good practice to type the error if you have custom error types defined
+  await client.events.getById({ eventId: 'invalid-id' });
+} catch (error: any) {
+  // It's good practice to type the error if you have custom error types defined
   console.error(`Error Code: ${error.code}`);
   console.error(`Message: ${error.message}`);
   if (error.code === 'API_ERROR') {
@@ -176,16 +186,19 @@ Please see the docs in the CONTRIBUTIONS.md file, thanks!
 [refining]
 
 From main branch on local:
+
 - Pull latest code
 - git checkout -b some-new-branch
 - git commit -m 'feat(context): my latest work on feature x'
 - git push, copy URL
 
 On github
+
 > Open PR on github
 > Perfect, merge when checks pass
 
 On local:
+
 - checkout main
 - git pull
 - git branch -d release (so we have a clean release branch)
@@ -195,17 +208,15 @@ On local:
 - git push
 
 On github:
+
 - Open PR main <- release on github
-> Perfect, merge when checks pass (check why no build)
+  > Perfect, merge when checks pass (check why no build)
 
 On local:
+
 - git checkout main
 - git tag -a vx.x.x -m 'release vx.x.x'
-- git push origin vx.x.x  <<<< RELEASE to github and NPM
-
-
-
-
+- git push origin vx.x.x <<<< RELEASE to github and NPM
 
 ## Roadmap
 

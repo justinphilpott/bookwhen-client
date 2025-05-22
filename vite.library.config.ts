@@ -25,12 +25,12 @@ export default defineConfig({
       formats: ['es'] // Explicitly set to only 'es'
     },
     rollupOptions: {
-      external: ['axios', 'zod'],
+      external: [], // Bundle axios and zod
       output: // Keep only the ESM output configuration
         {
           format: 'es',
           exports: 'named',
-          preserveModules: true, // Good for ESM
+          preserveModules: false, // Good for ESM
           inlineDynamicImports: false, // Add this line
           globals: { // Less relevant for ESM library, but harmless
             axios: 'axios',

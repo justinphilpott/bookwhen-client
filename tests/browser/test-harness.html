@@ -2,18 +2,13 @@
 <html>
 <head>
   <title>Bookwhen Client Test Harness</title>
-  <script type="importmap">
-  {
-    "imports": {
-      "axios": "/node_modules/axios/dist/esm/axios.js",
-      "zod": "/node_modules/zod/lib/index.mjs"
-    }
-  }
-  </script>
-  <!-- The test script (/dist/index.es.js) will be imported dynamically 
-       by Playwright's page.evaluate in client.spec.ts -->
 </head>
 <body>
   <div id="test-root"></div>
+  <script type="module">
+    import { createBookwhenClient } from '/dist/index.js';
+    window.createBookwhenClient = createBookwhenClient;
+    console.log('test-harness.html: createBookwhenClient assigned to window:', typeof window.createBookwhenClient);
+  </script>
 </body>
 </html>

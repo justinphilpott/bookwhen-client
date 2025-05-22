@@ -11,10 +11,10 @@ describe('BookwhenClient Integration', () => {
   describe('BookwhenClient - Events Service', () => {
     it('should call the correct endpoint when getById is called', async () => {
       const mockAxiosInstance = {
-        get: vi.fn().mockResolvedValue({ 
-          data: { 
-            data: { id: 'event123' } 
-          }
+        get: vi.fn().mockResolvedValue({
+          data: {
+            data: { id: 'event123' },
+          },
         }),
       } as unknown as AxiosInstance;
       const client = new BookwhenClient(mockAxiosInstance);
@@ -37,15 +37,17 @@ describe('BookwhenClient Integration', () => {
       const includes: EventResource[] = ['location', 'tickets'];
       const filters = {
         title: ['Workshop'],
-        start_at: ['2023-01-01']
+        start_at: ['2023-01-01'],
       };
       const eventsData = [
         { id: '1', type: 'event' },
         { id: '2', type: 'event' },
       ];
-      const events = await client.events.getMultiple({includes, filters});
+      const events = await client.events.getMultiple({ includes, filters });
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/events?filter[title]=Workshop&filter[start_at]=2023-01-01&include=location,tickets');
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        '/events?filter[title]=Workshop&filter[start_at]=2023-01-01&include=location,tickets',
+      );
       expect(events).toEqual([{ id: 'event1' }, { id: 'event2' }]);
     });
 
@@ -61,7 +63,7 @@ describe('BookwhenClient Integration', () => {
       const mockAxiosInstance = {} as AxiosInstance;
       const client = new BookwhenClient(mockAxiosInstance);
       const eventsService = client.events;
-  
+
       expect(eventsService['axiosInstance']).toBe(client['axiosInstance']);
     });
 
@@ -69,29 +71,35 @@ describe('BookwhenClient Integration', () => {
       const mockAxiosInstance = {
         get: vi.fn().mockRejectedValue(new Error('Network Error')),
       } as unknown as AxiosInstance;
-  
+
       const client = new BookwhenClient(mockAxiosInstance);
-  
-      // @ts-ignore - Testing invalid parameter type
-      await expect(client.events.getById(453453)).rejects.toThrow('events.getById: Schema Validation failed: Expected object, received number');
 
       // @ts-ignore - Testing invalid parameter type
-      await expect(client.events.getById('invalidId')).rejects.toThrow('events.getById: Schema Validation failed: Expected object, received string');
+      await expect(client.events.getById(453453)).rejects.toThrow(
+        'events.getById: Schema Validation failed: Expected object, received number',
+      );
+
+      // @ts-ignore - Testing invalid parameter type
+      await expect(client.events.getById('invalidId')).rejects.toThrow(
+        'events.getById: Schema Validation failed: Expected object, received string',
+      );
     });
 
     it('should correctly pass filters and includes to events.getMultiple method', async () => {
       const mockAxiosInstance = {
         get: vi.fn().mockResolvedValue({ data: { data: [] } }),
       } as unknown as AxiosInstance;
-  
+
       const client = new BookwhenClient(mockAxiosInstance);
-  
+
       const filters = { tag: ['workshop', 'seminar'], from: '20220101' };
       const includes: EventResource[] = ['location', 'tickets.events'];
-  
+
       await client.events.getMultiple({ filters, includes });
-  
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/events?filter[tag]=workshop,seminar&filter[from]=20220101&include=location,tickets.events');
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        '/events?filter[tag]=workshop,seminar&filter[from]=20220101&include=location,tickets.events',
+      );
     });
   });
 });

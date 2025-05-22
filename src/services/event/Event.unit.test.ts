@@ -1,11 +1,4 @@
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import { EventService } from './Event.js';
@@ -33,7 +26,9 @@ describe('EventService', () => {
     };
 
     // Mock Axios request using vi.spyOn
-    mockAxiosInstance.get = vi.fn().mockResolvedValue({ data: { data: eventData } });
+    mockAxiosInstance.get = vi
+      .fn()
+      .mockResolvedValue({ data: { data: eventData } });
 
     const result = await eventService.getById({ eventId });
 
@@ -43,28 +38,30 @@ describe('EventService', () => {
 
   it('should handle error when retrieving a single event by ID', async () => {
     const eventId = '123';
-    const errorMessage = 'Event not found. Please check the event ID and try again.';
+    const errorMessage =
+      'Event not found. Please check the event ID and try again.';
 
     // Mock Axios request using vi.spyOn
     vi.spyOn(mockAxiosInstance, 'get').mockRejectedValue({
       response: {
         status: 404,
-        data: { message: errorMessage }
-      }
+        data: { message: errorMessage },
+      },
     });
 
     expect(eventService.getById({ eventId })).rejects.toThrow(errorMessage);
   });
 
   it('should handle error when retrieving multiple events', async () => {
-    const errorMessage = 'BookwhenClient: The requested resource could not be found';
+    const errorMessage =
+      'BookwhenClient: The requested resource could not be found';
 
     // Mock Axios request using vi.spyOn
     vi.spyOn(mockAxiosInstance, 'get').mockRejectedValue({
       response: {
         status: 404,
-        data: { message: errorMessage }
-      }
+        data: { message: errorMessage },
+      },
     });
 
     expect(eventService.getMultiple()).rejects.toThrow(errorMessage);
@@ -78,7 +75,9 @@ describe('EventService', () => {
     ];
 
     // Mock Axios request using vi.spyOn
-    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({ data: { data: eventsData } });
+    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({
+      data: { data: eventsData },
+    });
 
     const result = await eventService.getMultiple();
     expect(result).toEqual(eventsData as BookwhenEvent[]);
@@ -96,11 +95,15 @@ describe('EventService', () => {
     ];
 
     // Mock Axios request using vi.spyOn
-    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({ data: { data: eventsData } });
+    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({
+      data: { data: eventsData },
+    });
 
     const result = await eventService.getMultiple({ filters });
     expect(result).toEqual(eventsData as BookwhenEvent[]);
-    expect(mockAxiosInstance.get).toHaveBeenCalledWith('/events?filter[title]=Test%20Event&filter[from]=test&filter[detail]=Event%20Details');
+    expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+      '/events?filter[title]=Test%20Event&filter[from]=test&filter[detail]=Event%20Details',
+    );
   });
 
   it('should retrieve multiple events with includes', async () => {
@@ -111,28 +114,36 @@ describe('EventService', () => {
     ];
 
     // Mock Axios request using vi.spyOn
-    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({ data: { data: eventsData } });
+    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({
+      data: { data: eventsData },
+    });
 
     const result = await eventService.getMultiple({ includes });
     expect(result).toEqual(eventsData as BookwhenEvent[]);
-    expect(mockAxiosInstance.get).toHaveBeenCalledWith('/events?include=location,attachments');
+    expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+      '/events?include=location,attachments',
+    );
   });
 
   it('should retrieve multiple events with includes and filters', async () => {
     const includes: EventResource[] = ['location', 'tickets'];
     const filters = {
       title: ['Workshop'],
-      start_at: ['2023-01-01']
+      start_at: ['2023-01-01'],
     };
     const eventsData = [
       { id: '1', type: 'event' },
       { id: '2', type: 'event' },
     ];
 
-    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({ data: { data: eventsData } });
+    vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({
+      data: { data: eventsData },
+    });
 
     const result = await eventService.getMultiple({ filters, includes });
     expect(result).toEqual(eventsData as BookwhenEvent[]);
-    expect(mockAxiosInstance.get).toHaveBeenCalledWith('/events?filter[title]=Workshop&filter[start_at]=2023-01-01&include=location,tickets');
-  });  
+    expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+      '/events?filter[title]=Workshop&filter[start_at]=2023-01-01&include=location,tickets',
+    );
+  });
 });

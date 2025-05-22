@@ -1,12 +1,12 @@
 // src/clients/BookwhenClient.ts
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import { EventService } from '../services/event/Event.js';  // Ensure this file and class are setup accordingly
+import { EventService } from '../services/event/Event.js'; // Ensure this file and class are setup accordingly
 import { CLIENT_HTTP_STATUS_CODES } from '../request/httpStatusCodes.js';
 
 /**
  * Client for the Bookwhen API.
- * 
+ *
  * @see https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml#/ClassPass/get_class_passes__class_pass_id_
  */
 export class BookwhenClient {
@@ -19,19 +19,20 @@ export class BookwhenClient {
    * @throws Error if axiosInstance is not provided.
    */
   constructor(private axiosInstance: AxiosInstance) {
-    this.isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
+    this.isBrowser =
+      typeof window !== 'undefined' && typeof window.document !== 'undefined';
     if (!axiosInstance) {
       throw new Error('BookwhenClient - you must provide an axios instance');
     }
   }
 
-  /** 
+  /**
    * Gets the EventService instance.
-   * 
+   *
    * Available methods:
    * - getById(params: GetEventByIdParams): Promise<BookwhenEvent>
    * - getMultiple(params: GetMultipleEventsParams): Promise<BookwhenEvent[]>
-   * 
+   *
    * @returns The EventService instance.
    */
   get events(): EventService {
@@ -53,8 +54,14 @@ interface BookwhenClientOptions {
  * @param apiKey - The API key used for authentication.
  * @returns The Axios instance.
  */
-export function createBookwhenClient(options: BookwhenClientOptions): BookwhenClient {
-  const { apiKey, baseURL = 'https://api.bookwhen.com/v2', debug = false } = options;
+export function createBookwhenClient(
+  options: BookwhenClientOptions,
+): BookwhenClient {
+  const {
+    apiKey,
+    baseURL = 'https://api.bookwhen.com/v2',
+    debug = false,
+  } = options;
 
   const axiosInstance = axios.create({
     baseURL: baseURL,
@@ -83,11 +90,11 @@ export function createBookwhenClient(options: BookwhenClientOptions): BookwhenCl
     },
   );
 
-  if(debug) {
+  if (debug) {
     // Add a request interceptor to log the details
-    axiosInstance.interceptors.request.use(request => {
+    axiosInstance.interceptors.request.use((request) => {
       console.log('Bookwhen Request Debug:', {
-        request: request
+        request: request,
       });
       return request;
     });
