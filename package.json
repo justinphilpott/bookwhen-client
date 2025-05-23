@@ -1,6 +1,6 @@
 {
   "name": "@jphil/bookwhen-client",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "TypeScript client for the Bookwhen API (v2)",
   "private": false,
   "type": "module",

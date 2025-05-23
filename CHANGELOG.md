@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.3.2
+
+### Patch Changes
+
+- a9e62f8: Fix publish workflow
+
 ## 0.3.1
 
 ### Patch Changes
