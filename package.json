@@ -24,7 +24,7 @@
     "serve:test:browser": "http-server . -p 3000 -c-1",
     "test:browser": "playwright test",
     "test:node": "vitest run",
-    "test": "pnpm test:node && start-server-and-test serve:test:browser http://localhost:3000 test:browser",
+    "test": "pnpm test:node && pnpm build && start-server-and-test serve:test:browser http://localhost:3000 test:browser",
     "test:node:coverage": "vitest run --coverage",
     "type-check": "tsc --noEmit",
     "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm",
