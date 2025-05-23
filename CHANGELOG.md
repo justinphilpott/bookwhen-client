@@ -1,5 +1,20 @@
 # @jphil/bookwhen-client
 
+## 0.3.1
+
+### Patch Changes
+
+- fix(ci): ensure stable test execution locally and in CI
+
+  - Updated `.husky/pre-commit` to remove deprecated script lines.
+  - Modified `package.json`:
+    - Added `start-server-and-test` dev dependency.
+    - Ensured `pnpm test` script builds before browser tests and correctly manages the test server.
+  - Corrected `webServer.command` in `playwright.config.ts` to `pnpm serve:test:browser`.
+  - Reordered steps in `.github/workflows/ci.yml` to build the project before running browser tests.
+
+  These changes address pre-commit hook issues, Husky deprecation warnings, and Playwright timeouts by ensuring consistent build and server management for tests.
+
 ## 0.3.0
 
 ### Minor Changes
