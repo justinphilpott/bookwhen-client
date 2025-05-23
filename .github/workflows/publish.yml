@@ -33,14 +33,14 @@ jobs:
       - name: Run Node.js tests
         run: pnpm test:node
 
+      - name: Build project
+        run: pnpm build
+
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run browser tests
         run: pnpm test:browser
-
-      - name: Build project
-        run: pnpm build
 
       - name: Configure npm authentication
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
