@@ -31,13 +31,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run tests
-        run: pnpm test
+        run: pnpm test:node
+
+      - name: Build project
+        run: pnpm build
 
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps chromium # Or just --with-deps if you test more than chromium
 
       - name: Run browser tests
         run: pnpm test:browser
-
-      - name: Build project
-        run: pnpm build

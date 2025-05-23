@@ -11,7 +11,7 @@ vi.mock('../src/services/event/Event');
 describe('BookwhenClient', () => {
   it('should throw an error if axiosInstance is not provided', () => {
     expect(() => new BookwhenClient(undefined as any)).toThrowError(
-      'BookwhenClient - you must provide an axios instance'
+      'BookwhenClient - you must provide an axios instance',
     );
   });
 
@@ -50,12 +50,12 @@ describe('createBookwhenClient', () => {
     mockAxiosInstance = {
       interceptors: {
         response: {
-          use: vi.fn()
+          use: vi.fn(),
         },
         request: {
-          use: vi.fn()
-        }
-      }
+          use: vi.fn(),
+        },
+      },
     } as unknown as AxiosInstance;
 
     // Mock axios.create to return our mock instance
@@ -87,8 +87,13 @@ describe('createBookwhenClient', () => {
 
     createBookwhenClient({ apiKey: 'test-api-key' });
 
-    const [, errorHandler] = interceptor.mock.calls[0] as [unknown, (error: any) => Promise<never>];
+    const [, errorHandler] = interceptor.mock.calls[0] as [
+      unknown,
+      (error: any) => Promise<never>,
+    ];
 
-    await expect(errorHandler(errorResponse)).rejects.toThrowError('BookwhenClient: Bad request');
+    await expect(errorHandler(errorResponse)).rejects.toThrowError(
+      'BookwhenClient: Bad request',
+    );
   });
 });

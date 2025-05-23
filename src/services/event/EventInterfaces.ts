@@ -12,7 +12,7 @@ export interface IEventService {
    * @returns A Promise that resolves to an Event object, as defined by the Bookwhen API data structure.
    */
   getById(params: GetEventByIdParams): Promise<BookwhenEvent>;
-  
+
   /**
    * Retrieves multiple events based on specified parameters.
    * @param params Optional parameters to filter and control the list of returned events, according to what the Bookwhen API supports.
@@ -51,12 +51,15 @@ interface EventFiltersMap {
   from?: string;
   to?: string;
   compact?: boolean;
-};
+}
 
 export type EventFilters = {
   [K in keyof EventFiltersMap]?: EventFiltersMap[K];
 };
 
-export type EventResource = 'location' | 'attachments' | 'tickets' | 'tickets.events' | 'tickets.class_passes';
-
-
+export type EventResource =
+  | 'location'
+  | 'attachments'
+  | 'tickets'
+  | 'tickets.events'
+  | 'tickets.class_passes';

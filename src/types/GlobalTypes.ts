@@ -11,7 +11,12 @@ export interface Filters {
 }
 
 export interface BookwhenError {
-  code: 'NETWORK_ERROR'|'SECURITY_ERROR'|'API_ERROR'|'CONFIG_ERROR'|'UNKNOWN_ERROR';
+  code:
+    | 'NETWORK_ERROR'
+    | 'SECURITY_ERROR'
+    | 'API_ERROR'
+    | 'CONFIG_ERROR'
+    | 'UNKNOWN_ERROR';
   message: string;
   isBrowser: boolean;
   context?: {
