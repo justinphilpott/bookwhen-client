@@ -40,7 +40,7 @@ test('should fetch events', async ({ page, worker }) => {
   await page.goto('/tests/browser/test-harness.html');
   await page.waitForFunction(() => typeof window.createBookwhenClient === 'function');
 
-  const eventsData = await page.evaluate(async () => {
+  const eventsResponse = await page.evaluate(async () => {
     try {
       const createBookwhenClient = window.createBookwhenClient;
       if (typeof createBookwhenClient !== 'function') {
@@ -63,18 +63,19 @@ test('should fetch events', async ({ page, worker }) => {
     }
   });
 
-  expect(eventsData).toBeDefined();
-  expect(Array.isArray(eventsData)).toBe(true);
-  expect(eventsData.length).toBeGreaterThan(0);
-  expect(eventsData[0].id).toBe('ev-sny5-20250427110000'); // Updated to match MSW mock data
-  expect((eventsData[0] as any).relationships?.location).toBeDefined();
+  expect(eventsResponse).toBeDefined();
+  expect(eventsResponse.data).toBeDefined();
+  expect(Array.isArray(eventsResponse.data)).toBe(true);
+  expect(eventsResponse.data.length).toBeGreaterThan(0);
+  expect(eventsResponse.data[0].id).toBe('ev-sny5-20250427110000'); // Updated to match MSW mock data
+  expect((eventsResponse.data[0] as any).relationships?.location).toBeDefined();
 });
 
 test('should fetch a single event by ID', async ({ page }) => {
   await page.goto('/tests/browser/test-harness.html');
   await page.waitForFunction(() => typeof window.createBookwhenClient === 'function');
 
-  const eventData = await page.evaluate(async () => {
+  const eventResponse = await page.evaluate(async () => {
     try {
       const createBookwhenClient = window.createBookwhenClient;
       if (typeof createBookwhenClient !== 'function') {
@@ -94,7 +95,8 @@ test('should fetch a single event by ID', async ({ page }) => {
     }
   });
 
-  expect(eventData).toBeDefined();
-  expect(eventData.id).toBe('ev-sny5-20250427110000');
-  expect((eventData as any).relationships?.location).toBeDefined();
+  expect(eventResponse).toBeDefined();
+  expect(eventResponse.data).toBeDefined();
+  expect(eventResponse.data.id).toBe('ev-sny5-20250427110000');
+  expect((eventResponse.data as any).relationships?.location).toBeDefined();
 });

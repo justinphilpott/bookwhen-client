@@ -1,0 +1,41 @@
+# Changelog (Session Summary)
+
+## Fixes & Improvements:
+
+-   **Browser Test Suite Reliability:**
+    -   Modified `vite.library.config.ts`:
+        -   Set `preserveModules: false` to ensure a single bundled output for browser tests.
+        -   Removed `axios` and `zod` from `external` to bundle them directly, eliminating CDN dependency for tests.
+    -   Updated `package.json`:
+        -   Changed the `test:browser:with-server` script to `pnpm test:browser`, allowing Playwright's `webServer` config to manage the test server exclusively and prevent port conflicts.
+    -   Updated `tests/browser/test-harness.html`:
+        -   Removed the `<script type="importmap">` block as dependencies are now bundled.
+        -   (Temporarily added a `console.log` for debugging `window.createBookwhenClient` assignment - this can be removed if desired).
+    -   Updated `tests/browser/client.spec.ts`:
+        -   Added `await page.waitForFunction(() => typeof window.createBookwhenClient === 'function');` before `page.evaluate` calls in existing tests to ensure the client function is available.
+
+-   **CI and Local Test Execution Stability:**
+    -   Updated `.husky/pre-commit`:
+        -   Removed deprecated Husky script lines to prevent future failures and address warnings.
+    -   Updated `package.json`:
+        -   Added `start-server-and-test` as a dev dependency to manage server lifecycle during tests.
+        -   Modified the main `test` script to `pnpm test:node && pnpm build && start-server-and-test serve:test:browser http://localhost:3000 test:browser`. This ensures the project is built before browser tests run locally and that the test server is managed correctly.
+    -   Updated `playwright.config.ts`:
+        -   Corrected `webServer.command` to `pnpm serve:test:browser` to prevent recursive Playwright calls and ensure the correct server is started for tests.
+    -   Updated `.github/workflows/ci.yml`:
+        -   Reordered CI steps to ensure `pnpm build` is executed before `pnpm test:browser`, making build artifacts available for browser tests.
+
+## New Features & Test Coverage:
+
+-   **Enhanced Browser Test Coverage:**
+    -   Added a new test case to `tests/browser/client.spec.ts`: `test('should fetch a single event by ID', ...)` to verify the `client.events.getById()` method in the browser.
+
+## Refactoring:
+
+-   **Code Cleanup:**
+    -   Removed an unused default Zod import (`import z from 'zod';`) from `src/request/BookwhenRequest.ts`.
+
+## Documentation:
+
+-   **Test Plan Update:**
+    -   Updated `TEST_PLAN.md` to reflect the current status of test coverage, marking `getEvent()` and `listEvents()` as tested in the browser, and noting the current bundle size.

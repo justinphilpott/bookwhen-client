@@ -40,7 +40,7 @@ export class EventService implements IEventService {
    */
   async getById(
     params: z.infer<typeof GetEventByIdParamsSchema>,
-  ): Promise<BookwhenEvent> {
+  ): Promise<EventResponse> {
     try {
       const validParams = GetEventByIdParamsSchema.parse(params);
 
@@ -50,7 +50,7 @@ export class EventService implements IEventService {
       }
 
       const response = await this.axiosInstance.get<EventResponse>(`${query}`);
-      return response.data?.data;
+      return response.data;
     } catch (error) {
       if (error instanceof z.ZodError) {
         const errorMessages = error.errors.map((e) => e.message).join(', ');
@@ -73,18 +73,18 @@ export class EventService implements IEventService {
    * Retrieves multiple events based on filtering and pagination parameters.
    *
    * @param {GetMultipleEventsParams} params - Optional parameters for filtering and pagination.
-   * @return {Promise<BookwhenEvent[]>} A Promise that resolves to an array of BookwhenEvent objects.
+   * @return {Promise<EventsResponse>} A Promise that resolves to the full JSON:API response object.
    */
   async getMultiple(
     params: GetMultipleEventsParams = {},
-  ): Promise<BookwhenEvent[]> {
+  ): Promise<EventsResponse> {
     try {
       const query = new BookwhenRequest('/events');
       if (params.includes) query.addIncludes(params.includes);
       if (params.filters) query.addFilters(params.filters);
 
       const response = await this.axiosInstance.get<EventsResponse>(`${query}`); // uses the toString method
-      return response.data.data;
+      return response.data;
     } catch (error) {
       handleServiceHTTPErrors(error, SERVICE_HTTP_STATUS_CODES);
     }
