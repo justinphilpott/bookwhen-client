@@ -32,13 +32,26 @@ export interface BookwhenEvent {
   // Assuming relationships, links, and included will be defined later
 }
 
-// Assuming a response wrapper might be needed, especially if paginated or including metadata
-export interface EventsResponse {
-  data: BookwhenEvent[];
-  // Placeholder for pagination, links, etc.
+// JSON:API compliant response interfaces
+export interface JsonApiResponse<T> {
+  data: T;
+  included?: any[];
+  links?: {
+    self?: string;
+    first?: string;
+    last?: string;
+    prev?: string;
+    next?: string;
+  };
+  meta?: {
+    page?: {
+      current?: number;
+      total?: number;
+      size?: number;
+    };
+  };
 }
 
-export interface EventResponse {
-  data: BookwhenEvent;
-  // Plus any additional wrapping fields, like metadata or links
-}
+export interface EventsResponse extends JsonApiResponse<BookwhenEvent[]> {}
+
+export interface EventResponse extends JsonApiResponse<BookwhenEvent> {}

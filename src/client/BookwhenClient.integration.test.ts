@@ -13,7 +13,7 @@ describe('BookwhenClient Integration', () => {
       const mockAxiosInstance = {
         get: vi.fn().mockResolvedValue({
           data: {
-            data: { id: 'event123' },
+            data: { id: 'event123' }
           },
         }),
       } as unknown as AxiosInstance;
@@ -22,14 +22,16 @@ describe('BookwhenClient Integration', () => {
       const event = await client.events.getById({ eventId });
 
       expect(mockAxiosInstance.get).toHaveBeenCalledWith('/events/event123');
-      expect(event).toEqual({ id: 'event123' });
+      expect(event).toEqual({
+        data: { id: 'event123' }
+      });
     });
 
     it('should call the correct endpoint with correct parameters when events.getMultiple is called', async () => {
       const mockAxiosInstance = {
         get: vi.fn().mockResolvedValue({
           data: {
-            data: [{ id: 'event1' }, { id: 'event2' }],
+            data: [{ id: 'event1' }, { id: 'event2' }]
           },
         }),
       } as unknown as AxiosInstance;
@@ -39,16 +41,14 @@ describe('BookwhenClient Integration', () => {
         title: ['Workshop'],
         start_at: ['2023-01-01'],
       };
-      const eventsData = [
-        { id: '1', type: 'event' },
-        { id: '2', type: 'event' },
-      ];
       const events = await client.events.getMultiple({ includes, filters });
 
       expect(mockAxiosInstance.get).toHaveBeenCalledWith(
         '/events?filter[title]=Workshop&filter[start_at]=2023-01-01&include=location,tickets',
       );
-      expect(events).toEqual([{ id: 'event1' }, { id: 'event2' }]);
+      expect(events).toEqual({
+        data: [{ id: 'event1' }, { id: 'event2' }]
+      });
     });
 
     it('should correctly initialize and expose the events service via the client', () => {

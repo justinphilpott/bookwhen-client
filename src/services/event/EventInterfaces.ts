@@ -1,4 +1,4 @@
-import type { BookwhenEvent } from './EventTypes.js'; // Import the BookwhenEventDetail type
+import type { BookwhenEvent, EventResponse, EventsResponse } from './EventTypes.js'; // Import the BookwhenEventDetail type
 // import type { Resource, Filters } from '../BaseServiceInterfaces.js'; // Import the Include type
 
 /**
@@ -9,16 +9,16 @@ export interface IEventService {
    * Retrieves a single event by its ID.
    * @param eventId The unique identifier of the event.
    * @param include Optional parameter to include additional data.
-   * @returns A Promise that resolves to an Event object, as defined by the Bookwhen API data structure.
+   * @returns A Promise that resolves to the full JSON:API response object.
    */
-  getById(params: GetEventByIdParams): Promise<BookwhenEvent>;
+  getById(params: GetEventByIdParams): Promise<EventResponse>;
 
   /**
    * Retrieves multiple events based on specified parameters.
    * @param params Optional parameters to filter and control the list of returned events, according to what the Bookwhen API supports.
-   * @returns A Promise that resolves to an array of Event objects.
+   * @returns A Promise that resolves to the full JSON:API response object.
    */
-  getMultiple?(params?: GetMultipleEventsParams): Promise<BookwhenEvent[]>;
+  getMultiple?(params?: GetMultipleEventsParams): Promise<EventsResponse>;
 }
 
 /**
