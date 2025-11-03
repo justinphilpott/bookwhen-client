@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.4.1
+
+### Patch Changes
+
+- Ensure that the relationships resolving functions are exported
+
 ## 0.4.0
 
 ### Minor Changes
