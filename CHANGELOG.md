@@ -1,5 +1,49 @@
 # @jphil/bookwhen-client
 
+## 0.4.0
+
+### Minor Changes
+
+- - **Service methods now return full JSON:API response objects** instead of just data arrays
+  - `EventService.getById()` now returns `EventResponse` (JsonApiResponse)
+  - `EventService.getMultiple()` now returns `EventsResponse` (JsonApiResponse<BookwhenEvent[]>)
+  - **Complete JSON:API compliance** with access to `included`, `links`, and `meta` properties
+  - **Generic JSON:API relationship resolver utilities**:
+
+    - `resolveJsonApiRelationships()` for array data
+    - `resolveJsonApiResource()` for single resources
+
+  - **Full TypeScript support** with proper interfaces for JSON:API responses
+  - **Fixed missing included data** - previously only returned `.data` array, missing `included` resources
+  - **Corrected test expectations** to properly reflect optional JSON:API properties
+  - **Fixed browser test failures** that were expecting old API behavior
+
+  ```typescript
+  // Before (v0.3.2)
+  const events = await client.events.getMultiple(); // BookwhenEvent[]
+  const event = await client.events.getById({ eventId: '123' }); // BookwhenEvent
+
+  // After (v0.4.0)
+  const response = await client.events.getMultiple(); // EventsResponse
+  const events = response.data; // BookwhenEvent[]
+
+  const eventResponse = await client.events.getById({ eventId: '123' }); // EventResponse
+  const event = eventResponse.data; // BookwhenEvent
+
+  // Optional: Resolve relationships
+  const resolvedEvents = resolveJsonApiRelationships(
+    response.data,
+    response.included,
+  );
+  ```
+
+  - Access to complete API response including included resources
+  - Proper JSON:API specification compliance
+  - Future-proof for additional API properties
+  - Flexible relationship resolution when needed
+
+  All 47 Node.js tests and 3 browser tests passing with comprehensive test coverage.
+
 ## 0.3.2
 
 ### Patch Changes
