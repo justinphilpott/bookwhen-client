@@ -8,6 +8,10 @@ A universal API client library for the [Bookwhen](https://www.bookwhen.com) book
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [JSON:API Response Structure](#jsonapi-response-structure)
+- [Migration from v0.3.2](#migration-from-v032)
+- [Browser Usage](#browser-usage)
+- [Error Handling](#error-handling)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [Roadmap](#roadmap)
@@ -22,6 +26,9 @@ You'll likely be at least somewhat familiar with the [Bookwhen](https://www.book
 - Provides an easy way to access Bookwhen API from both NodeJS and browsers
 - Browser-compatible with proper CORS handling
 - Provides fully typed methods for each model (so far just the Events model) provided in the Bookwhen API v2
+- **Full JSON:API compliance** with access to included resources, links, and meta data
+- **Relationship resolution utilities** for working with included data
+- **Type-safe JSON:API response interfaces** with proper TypeScript support
 
 ## Installation
 
@@ -53,17 +60,19 @@ const client = createBookwhenClient({
   debug: true, // Optional: enables request logging
 });
 
-// Get a single event
-const event = await client.events.getById({
+// Get a single event - returns full JSON:API response
+const eventResponse = await client.events.getById({
   eventId: 'some-id',
   includes: ['location', 'tickets'], // Optional: include related resources
 });
+const event = eventResponse.data; // Access the event data
 
-// get all events
-const events = await client.events.getMultiple();
+// get all events - returns full JSON:API response
+const eventsResponse = await client.events.getMultiple();
+const events = eventsResponse.data; // Access the events array
 
-// get all events in 2025 tagged with 'workshop'
-const events_2025 = await client.events.getMultiple({
+// get all events in 2025 tagged with 'workshop' with included locations
+const events2025Response = await client.events.getMultiple({
   filters: {
     // Optional: filter by various
     from: '20250101',
@@ -72,11 +81,120 @@ const events_2025 = await client.events.getMultiple({
   },
   includes: ['location'], // Optional: Include related resources
 });
+const events2025 = events2025Response.data; // Access the events array
+const includedLocations = events2025Response.included; // Access included location data
 ```
 
 (N.B. Ensure you wrap the above statements in try/catch blocks to catch errors which could be thrown)
 
 Valid filters and includes for each method are detailed in the [API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml)
+
+## JSON:API Response Structure
+
+Service methods now return full JSON:API response objects instead of just data arrays. This provides access to all data returned by the Bookwhen API, including included resources, links, and metadata.
+
+### Response Structure Example
+
+```typescript
+const response = await client.events.getMultiple({
+  includes: ['location', 'tickets']
+});
+
+// response structure:
+{
+  data: [
+    {
+      id: 'ev-123',
+      type: 'event',
+      attributes: {
+        title: 'Thai massage with Justin',
+        start_at: '2025-11-02T11:00:00.000+00:00',
+        // ... other event attributes
+      },
+      relationships: {
+        location: { data: { id: 'loc-1', type: 'location' } },
+        tickets: { data: [{ id: 'ticket-1', type: 'ticket' }] }
+      }
+    }
+  ],
+  included: [
+    {
+      id: 'loc-1',
+      type: 'location',
+      attributes: {
+        address_text: 'MovingStillness Studio\nColdean\nBrighton',
+        latitude: 50.8608545,
+        longitude: -0.1070177
+      }
+    },
+    {
+      id: 'ticket-1',
+      type: 'ticket',
+      attributes: {
+        name: 'Standard Ticket',
+        price: 100,
+        available: true
+      }
+    }
+  ],
+  links: {
+    self: 'https://api.bookwhen.com/v2/events'
+  },
+  meta: {
+    // Optional metadata
+  }
+}
+```
+
+### Working with Included Data
+
+The library provides utility functions to help resolve relationships between resources:
+
+```typescript
+import { resolveJsonApiRelationships, resolveJsonApiResource } from '@jphil/bookwhen-client';
+
+// For multiple events
+const eventsResponse = await client.events.getMultiple({
+  includes: ['location', 'tickets']
+});
+
+// Resolve relationships for all events
+const resolvedEvents = resolveJsonApiRelationships(
+  eventsResponse.data, 
+  eventsResponse.included
+);
+
+// For a single event
+const eventResponse = await client.events.getById({
+  eventId: 'ev-123',
+  includes: ['location']
+});
+
+// Resolve relationships for a single event
+const resolvedEvent = resolveJsonApiResource(
+  eventResponse.data,
+  eventResponse.included
+);
+```
+
+## Migration from v0.3.2
+
+Version 0.4.0 introduces breaking changes to return full JSON:API responses:
+
+### Before (v0.3.2)
+```typescript
+const events = await client.events.getMultiple(); // BookwhenEvent[]
+const event = await client.events.getById({ eventId: '123' }); // BookwhenEvent
+```
+
+### After (v0.4.0)
+```typescript
+const response = await client.events.getMultiple(); // EventsResponse
+const events = response.data; // BookwhenEvent[]
+
+const eventResponse = await client.events.getById({ eventId: '123' }); // EventResponse
+const event = eventResponse.data; // BookwhenEvent
+```
 
 Services for the other models in the API are in the pipeline.
 
