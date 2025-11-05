@@ -310,10 +310,10 @@ From main branch on local:
 - git commit -m 'feat(context): my latest work on feature x'
 - git push, copy URL
 
-On github
+On github/local:
 
-> Open PR on github
-> Perfect, merge when checks pass
+- Open PR on github
+- Perfect the PR, merge when checks pass
 
 On local:
 
@@ -321,18 +321,19 @@ On local:
 - git pull
 - git branch -d release (so we have a clean release branch)
 - git checkout -b release
-- pnpm changeset (provide changelog message, commit will occur after)
+- pnpm changeset (provide changelog message - commit will occur in next step, not this one)
 - pnpm changeset version (bumps version numbers, and updates changelog, and commits >>> note new version number)
 - git push
 
 On github:
 
-- Open PR main <- release on github
-  > Perfect, merge when checks pass (check why no build)
+- Open PR for release to merge into main
+- Perfect the PR, merge when checks pass (check why no build)
 
 On local:
 
 - git checkout main
+- git pull
 - git tag -a vx.x.x -m 'release vx.x.x'
 - git push origin vx.x.x <<<< RELEASE to github and NPM
 
