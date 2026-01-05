@@ -76,6 +76,15 @@ To get setup and running, just follow these steps:
    - Tests: Ensure all tests pass.
    - Build: Verify that the project builds successfully.
 
+## Maintainers: Publishing
+
+Publishing to npm is handled by the GitHub Actions workflow on version tags (`v*.*.*`) in `.github/workflows/publish.yml`.
+
+- This repo uses npm **trusted publishing (OIDC)**, so no `NPM_TOKEN` secret is required.
+- Ensure the workflow has `permissions: { id-token: write, contents: write }` and uses npm CLI `>= 11.5.1`.
+- Provenance is generated automatically for public packages from public repos; no `--provenance` flag is required.
+- If you ever switch back to token-based publishing, use a **granular** token with **bypass 2FA** and rotate before expiry.
+
 ### 9. Address CI Results
    - Success: Your PR is ready for review.
    - Failure: Review and resolve issues, then push changes to trigger the CI pipeline again.
