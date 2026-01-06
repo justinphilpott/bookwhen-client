@@ -80,60 +80,24 @@ To get setup and running, just follow these steps:
    - Success: Your PR is ready for review.
    - Failure: Review and resolve issues, then push changes to trigger the CI pipeline again.
 
-## Maintainers: Publishing (distinct release flow)
+## Maintainers: Publishing (automated release PR)
 
-This flow is separate from the contributor workflow above. Contributor PRs must not include version bumps; the release PR is the only place `pnpm changeset version` runs.
+This flow is separate from the contributor workflow above. Contributor PRs must not include version bumps; they should add a changeset file when needed.
 
 ### Maintainer release process
-1. If you have new changes to land, start from `main`, commit, push, and merge a PR after checks pass.
+1. Merge feature PRs with changesets as usual.
+2. The Changesets Action keeps a single release PR updated (branch `changeset-release/main`) with version bumps and `CHANGELOG.md` updates.
+3. When ready to release, merge the release PR.
+4. The publish workflow on `main` runs tests/build, publishes to npm via OIDC, then tags and creates the GitHub release.
 
-   ```bash
-   $ git checkout main
-   $ git pull
-   $ git checkout -b some-new-branch
-   $ git commit -m "feat(context): my latest work on feature x"
-   $ git push -u origin some-new-branch
-   ```
+Publishing is handled by `.github/workflows/publish.yml`, which uses Changesets to open the release PR and publishes when a version bump is detected on `main`.
 
-   Open the PR on GitHub (copy the URL if you need it later).
-2. Create a clean release branch from updated `main` (delete any local `release` branch first if it exists):
-   
-   ```bash
-   $ git checkout main
-   $ git pull
-   $ git branch -d release
-   $ git checkout -b release
-   ```
-
-3. Prepare the release with Changesets (the `pnpm changeset` step only creates the changeset file; the commit happens in the next step):
-
-   ```bash
-   $ pnpm changeset
-   $ pnpm changeset version
-   ```
-
-   The `version` command bumps versions, updates `CHANGELOG.md`, and creates the commit.
-4. Push the release branch and open a release PR; merge after checks pass. If no CI runs, verify required checks/workflow triggers.
-
-   ```bash
-   $ git push -u origin release
-   ```
-
-5. Tag the release on `main` and push the tag to trigger publishing:
-
-   ```bash
-   $ git checkout main
-   $ git pull
-   $ git tag -a vX.Y.Z -m "release vX.Y.Z"
-   $ git push origin vX.Y.Z
-   ```
-
-Publishing to npm is handled by the GitHub Actions workflow on version tags (`v*.*.*`) in `.github/workflows/publish.yml`.
-
-- Ensure `.github/workflows/publish.yml` is on `main` before tagging so the tag uses the OIDC publish workflow.
+- Ensure `.github/workflows/publish.yml` is on `main` before releasing so OIDC is active.
 - This repo uses npm **trusted publishing (OIDC)**, so no `NPM_TOKEN` secret is required.
-- Ensure the workflow has `permissions: { id-token: write, contents: write }` and uses npm CLI `>= 11.5.1`.
+- Ensure the workflow has `permissions: { id-token: write, contents: write, pull-requests: write }` and uses npm CLI `>= 11.5.1`.
+- The workflow only publishes when `package.json` version changes (i.e., after the release PR merge).
 - Provenance is generated automatically for public packages from public repos; no `--provenance` flag is required.
+- If there are no changesets, no release PR is created; add one with `pnpm changeset`.
 - If you ever switch back to token-based publishing, use a **granular** token with **bypass 2FA** and rotate before expiry.
 
 Thank you again for considering making a contribution!

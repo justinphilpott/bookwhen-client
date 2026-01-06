@@ -5,48 +5,32 @@ description: Maintainer release and publishing workflow for the @jphil/bookwhen-
 
 # Maintainer Publishing Workflow (Bookwhen Client)
 
-## Quick path (maintainer flow, distinct from contributor PRs)
-1. Ensure `main` is up to date and CI is green.
-2. If new work is needed, land it via a normal PR and merge to `main`.
-   - `git checkout -b some-new-branch`
-   - `git commit -m "feat(context): my latest work on feature x"`
-   - `git push -u origin some-new-branch`
-3. Create a clean release branch from `main`:
-   - `git checkout main`
-   - `git pull`
-   - `git branch -d release` (if it exists locally)
-   - `git checkout -b release`
-4. Prepare the release with Changesets:
-   - `pnpm changeset` (creates a changeset file; commit happens in the next step)
-   - `pnpm changeset version` (bumps versions, updates `CHANGELOG.md`, commits)
-5. Push the release branch and open a release PR; merge after checks pass.
-   - `git push -u origin release`
-6. Tag and push the release from `main`:
-   - `git checkout main`
-   - `git pull`
-   - `git tag -a vX.Y.Z -m "release vX.Y.Z"`
-   - `git push origin vX.Y.Z`
-7. Monitor the publish workflow and confirm:
-   - npm package version is live
-   - GitHub release is created
+## Quick path (automated release PR, maintainer only)
+1. Land changes via normal PRs, adding `pnpm changeset` files as needed.
+2. The Changesets Action keeps a single release PR updated (branch `changeset-release/main`) with version bumps and `CHANGELOG.md` updates.
+3. When ready to release, merge the release PR (tell me to release and I can merge it).
+4. The publish workflow on `main` runs tests/build, publishes to npm via OIDC, then tags and creates the GitHub release.
 
 ## Notes
-- The release PR is the only place version bumps should appear; contributor PRs must not include `pnpm changeset version`.
+- Version bumps happen only in the release PR; contributor PRs should only add changeset files.
+- Tags are created after a successful publish; no manual tag push is required.
 
 ## Trusted publishing requirements
-- Ensure `.github/workflows/publish.yml` is on `main` before tagging so the tag uses the OIDC publish workflow.
+- Ensure `.github/workflows/publish.yml` is on `main` before releasing so OIDC is active.
 - Ensure the npm trusted publisher is configured for this repo and `publish.yml`.
-- Ensure workflow permissions include `id-token: write` and `contents: write`.
+- Ensure workflow permissions include `id-token: write`, `contents: write`, and `pull-requests: write`.
 - Ensure the workflow runs on GitHub-hosted runners (OIDC requires this).
 - Ensure npm CLI version is >= 11.5.1 in the workflow.
 - Ensure the tag version matches `package.json`.
 
 ## Troubleshooting
 - Re-check trusted publisher fields (org/user, repo, workflow filename) and `id-token: write` if npm publish fails to authenticate.
-- If the publish workflow does not run, confirm the tag matches `v*.*.*` and that `publish.yml` exists in the tagged commit.
+- If no release PR appears, confirm there are changeset files in `.changeset/` and the Changesets Action ran on `main`.
+- If publish does not run, confirm the release PR was merged and `package.json` version changed.
 - Use a read-only npm token for install only if private dependency installs fail.
 - Expect provenance only for public packages from public repos; it is automatic with trusted publishing.
 
 ## Files to consult
 - `.github/workflows/publish.yml`
+- `.changeset/config.json`
 - `CONTRIBUTING.md` (maintainer publishing notes)
