@@ -1,11 +1,18 @@
 # `@jphil/bookwhen-client`
 
-A universal API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in TypeScript for both NodeJS and browser environments.
+[![npm version](https://img.shields.io/npm/v/@jphil/bookwhen-client.svg)](https://www.npmjs.com/package/@jphil/bookwhen-client)
+[![CI](https://github.com/jphil/bookwhen-client/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/jphil/bookwhen-client/actions/workflows/ci.yml)
+
+A universal API client library for the [Bookwhen](https://www.bookwhen.com) booking platform [API (v2)](https://api.bookwhen.com/v2), written in TypeScript for Node.js and browser environments.
+
+Status: pre-1.0.0; APIs may change. Please file issues for bugs or missing endpoints.
+Changelog: [CHANGELOG.md](CHANGELOG.md)
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
+- [Supported Models](#supported-models)
 - [Installation](#installation)
 - [Usage](#usage)
 - [JSON:API Response Structure](#jsonapi-response-structure)
@@ -19,23 +26,32 @@ A universal API client library for the [Bookwhen](https://www.bookwhen.com) book
 
 ## Overview
 
-You'll likely be at least somewhat familiar with the [Bookwhen](https://www.bookwhen.com) booking platform if you've landed here. But if not, you'll want to have a look at their [API (v2) documentation](https://api.bookwhen.com/v2). There's also a nice [Swagger style layout of the Bookwhen API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml)
+If you're new to Bookwhen, start with the [API (v2) documentation](https://api.bookwhen.com/v2). There's also a [Swagger UI view of the v2 spec](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml).
 
 ## Features
 
-- Provides an easy way to access Bookwhen API from both NodeJS and browsers
-- Browser-compatible with proper CORS handling
-- Provides fully typed methods for each model (so far just the Events model) provided in the Bookwhen API v2
-- **Full JSON:API compliance** with access to included resources, links, and meta data
+- Easy access to the Bookwhen API from Node.js and browsers
+- Typed methods for each supported model (currently Events)
+- **Full JSON:API compliance** with access to included resources, links, and metadata
 - **Relationship resolution utilities** for working with included data
 - **Type-safe JSON:API response interfaces** with proper TypeScript support
 
+## Supported Models
+
+| Model | Status | Notes |
+| --- | --- | --- |
+| Events | Supported | Full JSON:API responses and relationship helpers |
+
+Additional models are planned; see the [issue tracker](https://github.com/jphil/bookwhen-client/issues).
+
 ## Installation
 
-Install via pnpm:
+Install via pnpm (or npm/yarn):
 
 ```bash
 pnpm add @jphil/bookwhen-client
+# or npm install @jphil/bookwhen-client
+# or yarn add @jphil/bookwhen-client
 ```
 
 As `axios` and `zod` are peer dependencies, ensure they are also installed in your project:
@@ -48,7 +64,7 @@ pnpm add axios zod
 
 ## Usage
 
-This library is distributed as an ES module. The following usage pattern applies to modern Node.js environments (with `type: "module"` in your `package.json` or when using `.mjs` files) and browser environments when using a bundler. For direct browser usage without a bundler, see the [Browser Usage](#browser-usage) section below.
+This library is published as an ES module. It works in modern Node.js (with `type: "module"` or `.mjs`) and in browser builds via a bundler. For direct browser usage without a bundler, see the [Browser Usage](#browser-usage) section.
 
 ```typescript
 // import the client factory
@@ -60,18 +76,18 @@ const client = createBookwhenClient({
   debug: true, // Optional: enables request logging
 });
 
-// Get a single event - returns full JSON:API response
+// Get a single event (full JSON:API response)
 const eventResponse = await client.events.getById({
   eventId: 'some-id',
   includes: ['location', 'tickets'], // Optional: include related resources
 });
 const event = eventResponse.data; // Access the event data
 
-// get all events - returns full JSON:API response
+// Get all events (full JSON:API response)
 const eventsResponse = await client.events.getMultiple();
 const events = eventsResponse.data; // Access the events array
 
-// get all events in 2025 tagged with 'workshop' with included locations
+// Get all events in 2025 tagged with 'workshop', including locations
 const events2025Response = await client.events.getMultiple({
   filters: {
     // Optional: filter by various
@@ -85,13 +101,35 @@ const events2025 = events2025Response.data; // Access the events array
 const includedLocations = events2025Response.included; // Access included location data
 ```
 
-(N.B. Ensure you wrap the above statements in try/catch blocks to catch errors which could be thrown)
+### End-to-end example
 
-Valid filters and includes for each method are detailed in the [API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml)
+```typescript
+import {
+  createBookwhenClient,
+  resolveJsonApiRelationships,
+} from '@jphil/bookwhen-client';
+
+const client = createBookwhenClient({ apiKey: 'your-API-key' });
+
+const response = await client.events.getMultiple({
+  includes: ['location', 'tickets'],
+});
+
+const resolvedEvents = resolveJsonApiRelationships(
+  response.data,
+  response.included ?? []
+);
+
+const firstEvent = resolvedEvents[0];
+```
+
+Note: wrap calls in try/catch blocks to handle errors; see [Error Handling](#error-handling).
+
+See the [API v2 docs](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml) for valid filters and includes by endpoint.
 
 ## JSON:API Response Structure
 
-Service methods now return full JSON:API response objects instead of just data arrays. This provides access to all data returned by the Bookwhen API, including included resources, links, and metadata.
+Service methods return full JSON:API response objects instead of just data arrays. This provides access to all data returned by the Bookwhen API, including included resources, links, and metadata.
 
 ### Response Structure Example
 
@@ -196,9 +234,7 @@ const eventResponse = await client.events.getById({ eventId: '123' }); // EventR
 const event = eventResponse.data; // BookwhenEvent
 ```
 
-Services for the other models in the API are in the pipeline.
-
-N.B. This library is still a pre-1.0.0 WIP, please use accordingly, and pls submit issues for any bugs!
+Support for other API models is planned.
 
 ## Browser Usage
 
@@ -293,49 +329,11 @@ Required configuration:
 
 API requests to the Bookwhen API are authenticated using Basic Authentication with the API Key as the username and a blank password.
 
-API keys can be generated in the [API tokens setup area of your Bookwhen account](https://admin.bookwhen.com/settings/api_access_permission_sets). (This will link to the API settings page in your Bookwhen account if you have one and are logged into your admin account)
+API keys can be generated in the [API tokens setup area of your Bookwhen account](https://admin.bookwhen.com/settings/api_access_permission_sets). (This will link to the API settings page in your Bookwhen account if you have one and are logged into your admin account.)
 
 ## Contributing
 
-Please see the docs in the CONTRIBUTIONS.md file, thanks!
-
-## Mainainter release process
-
-[refining]
-
-From main branch on local:
-
-- Pull latest code
-- git checkout -b some-new-branch
-- git commit -m 'feat(context): my latest work on feature x'
-- git push, copy URL
-
-On github/local:
-
-- Open PR on github
-- Perfect the PR, merge when checks pass
-
-On local:
-
-- checkout main
-- git pull
-- git branch -d release (so we have a clean release branch)
-- git checkout -b release
-- pnpm changeset (provide changelog message - commit will occur in next step, not this one)
-- pnpm changeset version (bumps version numbers, and updates changelog, and commits >>> note new version number)
-- git push
-
-On github:
-
-- Open PR for release to merge into main
-- Perfect the PR, merge when checks pass (check why no build)
-
-On local:
-
-- git checkout main
-- git pull
-- git tag -a vx.x.x -m 'release vx.x.x'
-- git push origin vx.x.x <<<< RELEASE to github and NPM
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contributor workflow and maintainer publishing notes.
 
 ## Roadmap
 
@@ -344,7 +342,7 @@ On local:
 
 ### Todos
 
-@see the issue queue.
+See the [issue tracker](https://github.com/jphil/bookwhen-client/issues) for current todos.
 
 ## License
 

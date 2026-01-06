@@ -80,6 +80,26 @@ To get setup and running, just follow these steps:
    - Success: Your PR is ready for review.
    - Failure: Review and resolve issues, then push changes to trigger the CI pipeline again.
 
+## Maintainers: Publishing (automated release PR)
+
+This flow is separate from the contributor workflow above. Contributor PRs must not include version bumps; they should add a changeset file when needed.
+
+### Maintainer release process
+1. Merge feature PRs with changesets as usual.
+2. The Changesets Action keeps a single release PR updated (branch `changeset-release/main`) with version bumps and `CHANGELOG.md` updates.
+3. When ready to release, merge the release PR.
+4. The publish workflow on `main` runs tests/build, publishes to npm via OIDC, then tags and creates the GitHub release.
+
+Publishing is handled by `.github/workflows/publish.yml`, which uses Changesets to open the release PR and publishes when a version bump is detected on `main`.
+
+- Ensure `.github/workflows/publish.yml` is on `main` before releasing so OIDC is active.
+- This repo uses npm **trusted publishing (OIDC)**, so no `NPM_TOKEN` secret is required.
+- Ensure the workflow has `permissions: { id-token: write, contents: write, pull-requests: write }` and uses npm CLI `>= 11.5.1`.
+- The workflow only publishes when `package.json` version changes (i.e., after the release PR merge).
+- Provenance is generated automatically for public packages from public repos; no `--provenance` flag is required.
+- If there are no changesets, no release PR is created; add one with `pnpm changeset`.
+- If you ever switch back to token-based publishing, use a **granular** token with **bypass 2FA** and rotate before expiry.
+
 Thank you again for considering making a contribution!
 
 ## License
