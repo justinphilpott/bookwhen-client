@@ -1,5 +1,13 @@
 # @jphil/bookwhen-client
 
+## 0.5.0
+
+### Minor Changes
+
+- Add first-class service support for `locations`, `attachments`, and `class_passes`, completing parity with the core content models in Bookwhen API v2.
+
+  This release also adds meaningful unit/integration test coverage for the new services, exposes new client accessors and type exports, and modernizes project documentation into living docs (`TODO`, `DECISIONS`, `LEARNINGS`, and `AGENTS`).
+
 ## 0.4.2
 
 ### Patch Changes
