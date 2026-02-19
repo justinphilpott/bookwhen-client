@@ -109,7 +109,7 @@ Project docs are intentionally lightweight and living:
 
 ## Roadmap
 
-- Expand coverage to remaining Bookwhen v2 content models.
+- Improve and consolidate shared JSON:API typing across model services.
 - Continue improving test depth across browser and Node environments.
 - Iterate toward a stable 1.0 release with community feedback.
 

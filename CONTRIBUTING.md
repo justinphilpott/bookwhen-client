@@ -51,15 +51,15 @@ Do not run `pnpm changeset version` in feature PRs. Version bumps happen in rele
 
 ## Maintainer Release Notes
 
-High-level release flow:
+Current release flow:
 
 1. Merge completed work to `main`.
-2. Create a dedicated release branch.
-3. Run `pnpm changeset version` in the release branch and open a release PR.
-4. Merge release PR.
-5. Tag from updated `main` (`vX.Y.Z`) and push the tag.
+2. Run `pnpm changeset version` on your release prep commit.
+3. Push `main`.
+4. Create and push a semver tag from `main` (`vX.Y.Z`).
+5. GitHub Actions publishes to npm from `.github/workflows/publish.yml`.
 
-Publishing to npm is handled by `.github/workflows/publish.yml` on tag push and uses npm trusted publishing (OIDC). No `NPM_TOKEN` secret is required.
+Publishing uses npm trusted publishing (OIDC). No `NPM_TOKEN` secret is required.
 
 ## Documentation Expectations
 
