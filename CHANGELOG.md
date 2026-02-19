@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.5.1
+
+### Patch Changes
+
+- Fix npm release automation by switching GitHub Actions publishing to npm trusted publishing (OIDC) and removing token-based publish configuration.
+
 ## 0.5.0
 
 ### Minor Changes
