@@ -2,6 +2,7 @@
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 import { EventService } from '../services/event/Event.js'; // Ensure this file and class are setup accordingly
+import { TicketService } from '../services/ticket/Ticket.js';
 import { CLIENT_HTTP_STATUS_CODES } from '../request/httpStatusCodes.js';
 
 /**
@@ -11,6 +12,7 @@ import { CLIENT_HTTP_STATUS_CODES } from '../request/httpStatusCodes.js';
  */
 export class BookwhenClient {
   private eventService?: EventService;
+  private ticketService?: TicketService;
   private readonly isBrowser: boolean;
 
   /**
@@ -40,6 +42,14 @@ export class BookwhenClient {
       this.eventService = new EventService(this.axiosInstance);
     }
     return this.eventService;
+  }
+
+  get tickets(): TicketService {
+    if (!this.ticketService) {
+      this.ticketService = new TicketService(this.axiosInstance);
+    }
+
+    return this.ticketService;
   }
 }
 

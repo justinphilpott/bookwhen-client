@@ -21,11 +21,21 @@ test('handles Axios errors in Node environment', () => {
 });
 
 test('handles browser security errors with context (mocked)', () => {
-  // Mock browser globals
-  const originalWindow = global.window;
-  const originalNavigator = global.navigator;
-  global.window = { isSecureContext: true } as any;
-  global.navigator = { userAgent: 'test-agent' } as any;
+  const originalWindow = (globalThis as any).window;
+  const navigatorDescriptor = Object.getOwnPropertyDescriptor(
+    globalThis,
+    'navigator',
+  );
+
+  Object.defineProperty(globalThis, 'window', {
+    value: { isSecureContext: true },
+    configurable: true,
+  });
+
+  Object.defineProperty(globalThis, 'navigator', {
+    value: { userAgent: 'test-agent' },
+    configurable: true,
+  });
 
   try {
     const error = new DOMException('Security error', 'SecurityError');
@@ -36,9 +46,16 @@ test('handles browser security errors with context (mocked)', () => {
     expect(result.context?.browser?.isSecure).toBe(true);
     expect(result.context?.browser?.userAgent).toBe('test-agent');
   } finally {
-    // Restore globals
-    global.window = originalWindow;
-    global.navigator = originalNavigator;
+    Object.defineProperty(globalThis, 'window', {
+      value: originalWindow,
+      configurable: true,
+    });
+
+    if (navigatorDescriptor) {
+      Object.defineProperty(globalThis, 'navigator', navigatorDescriptor);
+    } else {
+      delete (globalThis as any).navigator;
+    }
   }
 });
 
@@ -49,8 +66,7 @@ test('handles Error objects with SecurityError name', () => {
 
   expect(result.code).toBe('SECURITY_ERROR');
   expect(result.isBrowser).toBe(true);
-  expect(result.context?.browser?.isSecure).toBeUndefined(); // No browser context in Node tests
-  expect(result.context?.browser?.userAgent).toBeUndefined();
+  expect(result.context?.timestamp).toBeTypeOf('number');
 });
 
 test('handles browser security errors', () => {

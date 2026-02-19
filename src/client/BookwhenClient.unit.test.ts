@@ -4,9 +4,11 @@ import type { AxiosInstance } from 'axios';
 import { createBookwhenClient } from './BookwhenClient.js';
 import { BookwhenClient } from './BookwhenClient.js';
 import { EventService } from '../services/event/Event.js';
+import { TicketService } from '../services/ticket/Ticket.js';
 
 vi.mock('axios');
 vi.mock('../src/services/event/Event');
+vi.mock('../src/services/ticket/Ticket');
 
 describe('BookwhenClient', () => {
   it('should throw an error if axiosInstance is not provided', () => {
@@ -40,13 +42,31 @@ describe('BookwhenClient', () => {
 
     expect(eventService['axiosInstance']).toBe(mockAxiosInstance);
   });
+
+  it('should expose TicketService via getter', () => {
+    const mockAxiosInstance = {} as AxiosInstance;
+    const client = new BookwhenClient(mockAxiosInstance);
+
+    const ticketService = client.tickets;
+
+    expect(ticketService['axiosInstance']).toBe(mockAxiosInstance);
+    expect(ticketService).toBeInstanceOf(TicketService);
+  });
+
+  it('should share axiosInstance with TicketService', () => {
+    const mockAxiosInstance = {} as AxiosInstance;
+    const client = new BookwhenClient(mockAxiosInstance);
+
+    const ticketService = client.tickets;
+
+    expect(ticketService['axiosInstance']).toBe(mockAxiosInstance);
+  });
 });
 
 describe('createBookwhenClient', () => {
   let mockAxiosInstance: AxiosInstance;
 
   beforeEach(() => {
-    // Create mock axios instance with interceptors
     mockAxiosInstance = {
       interceptors: {
         response: {
@@ -58,7 +78,6 @@ describe('createBookwhenClient', () => {
       },
     } as unknown as AxiosInstance;
 
-    // Mock axios.create to return our mock instance
     vi.spyOn(axios, 'create').mockReturnValue(mockAxiosInstance);
   });
 
@@ -81,7 +100,6 @@ describe('createBookwhenClient', () => {
 
     vi.spyOn(axios, 'create').mockReturnValue(axiosInstance);
 
-    // Mock the interceptor
     const interceptor = vi.fn();
     axiosInstance.interceptors.response.use = interceptor;
 

@@ -1,87 +1,70 @@
-Thanks for your interest in contributing to this project!
+# Contributing to `@jphil/bookwhen-client`
 
-## Useful References
+Thanks for your interest in contributing.
 
-You will likely need to reference the [Bookwhen API docs](https://api.bookwhen.com/v2), which are also available in [Swagger format](https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml).
+## References
 
-## Contribution Workflow
+- Bookwhen API docs: https://api.bookwhen.com/v2
+- Swagger layout: https://petstore.swagger.io/?url=https://api.bookwhen.com/v2/openapi.yaml
 
-To get setup and running, just follow these steps:
+## Quick Start
 
-### 1. Clone the Repository:  
-   Fork the repository (click the <kbd>Fork</kbd> button at the top right of
-   [this page](https://github.com/jphil/bookwhen-client)) 
+```bash
+git clone https://github.com/justinphilpott/bookwhen-client.git
+cd bookwhen-client
+pnpm install
+pnpm test
+pnpm build
+```
 
-   Then clone it locally:
-   
-   ```bash
-   $ git clone https://github.com/justinphilpott/bookwhen-client.git
-   ```  
-   
-   Navigate into the project directory:
-   
-   ```bash
-   $ cd bookwhen-client
-   ```
+## Development Workflow
 
-### 2. Create a new Branch:  
-   From main, create a new branch using the naming convention [type/scope], e.g., fix/error-handling or docs/typo. Use Conventional Commit types (e.g., fix, feat, docs) for type, and keep scope descriptive but short.
-   
-   ```bash
-   $ git checkout -b feature/your-feature
-   ```
-   
-### 3. Develop and Commit:
-   Make your code changes, ensuring you periodically rebase your branch onto the latest main to keep it up to date and minimize conflicts. This should be done at the start of your work and just before opening a pull request. Commit your changes to your branch with a clear and descriptive message that follows the [Conventional Commits standard](https://www.conventionalcommits.org):
+1. Create a branch from `main`.
+2. Make focused changes with tests.
+3. Commit using Conventional Commits (for example: `feat(tickets): add ticket service types`).
+4. Open a PR to `main` with testing notes.
 
-   ```bash
-   $ git add .
-   $ git commit -m "fix(scope): description of changes"
-   ``` 
+For long-running branches, regularly rebase on top of `main`.
 
-   N.B. All commits that fix bugs or add features need a test!
+## Testing and Quality
 
-### 4. Create a changeset (possibly)
-   If your changes affect functionality or user experience, create a changeset:
-   
-   ```bash
-   $ pnpm changeset
-   ```
+Run these before opening or updating a PR:
 
-   You will be asked to provide a detailed description of your changes. This will be used to generate a changelog when we publish an update, so be clear and concise. This will create a commit. N.B. DO NOT run "changeset version" which will try to bump versions - any PR's with version bumps will not be accepted.
+```bash
+pnpm lint
+pnpm test
+pnpm build
+pnpm check-exports
+```
 
-   [Learn more about Changesets](https://github.com/atlassian/changesets/tree/master/packages/cli).
+CI runs Node tests, build, and browser tests (Playwright/Chromium).
 
-### 5. Push the Feature Branch:  
-   Push your feature branch to your fork:
-   
-   ```bash
-   $ git push origin feature/your-feature
-   ```
+## Changesets
 
-### 6. Open a Pull Request (PR):  
-   On GitHub, open a PR from your branch in your forked repository to the main branch of this repository. Use the PR template to include a summary, any related issues, testing steps, and documentation updates.
+If your change impacts package behavior, API surface, or user-facing docs, add a changeset:
 
-### 7. Sync with Main Regularly:  
-   For long-running PRs, periodically sync your branch with main to avoid conflicts:
-   
-   ```bash
-   $ git fetch origin
-   $ git rebase origin/main
-   ```
+```bash
+pnpm changeset
+```
 
-### 8. CI Pipeline:  
-   The CI pipeline runs automated checks on your PR:
+Do not run `pnpm changeset version` in feature PRs. Version bumps happen in release flow.
 
-   - Tests: Ensure all tests pass.
-   - Build: Verify that the project builds successfully.
+## Maintainer Release Notes
 
-### 9. Address CI Results
-   - Success: Your PR is ready for review.
-   - Failure: Review and resolve issues, then push changes to trigger the CI pipeline again.
+High-level release flow:
 
-Thank you again for considering making a contribution!
+1. Merge completed work to `main`.
+2. Create a dedicated release branch.
+3. Run `pnpm changeset version` in the release branch and open a release PR.
+4. Merge release PR.
+5. Tag from updated `main` (`vX.Y.Z`) and push the tag.
+
+## Documentation Expectations
+
+- Keep docs in sync with behavior in the same PR.
+- Use `TODO.md` for active work, `DECISIONS.md` for architectural decisions, and `LEARNINGS.md` for validated discoveries.
+- Remove stale placeholders and outdated plan docs instead of accumulating drift.
 
 ## License
 
-By contributing your code to the @jphil/bookwhen-client GitHub repository, you agree to license your contribution under the ISC license.
+By contributing to this repository, you agree that your contributions are licensed under ISC.

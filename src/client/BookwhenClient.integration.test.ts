@@ -1,11 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { AxiosInstance } from 'axios';
 import { BookwhenClient } from './BookwhenClient.js';
 import type { EventResource } from '../services/event/EventInterfaces.js';
 import { EventService } from '../services/event/Event.js';
+import { TicketService } from '../services/ticket/Ticket.js';
 
 vi.mock('axios');
 vi.mock('../src/services/event/Event');
+vi.mock('../src/services/ticket/Ticket');
 
 describe('BookwhenClient Integration', () => {
   describe('BookwhenClient - Events Service', () => {
@@ -13,7 +15,7 @@ describe('BookwhenClient Integration', () => {
       const mockAxiosInstance = {
         get: vi.fn().mockResolvedValue({
           data: {
-            data: { id: 'event123' }
+            data: { id: 'event123' },
           },
         }),
       } as unknown as AxiosInstance;
@@ -23,7 +25,7 @@ describe('BookwhenClient Integration', () => {
 
       expect(mockAxiosInstance.get).toHaveBeenCalledWith('/events/event123');
       expect(event).toEqual({
-        data: { id: 'event123' }
+        data: { id: 'event123' },
       });
     });
 
@@ -31,7 +33,7 @@ describe('BookwhenClient Integration', () => {
       const mockAxiosInstance = {
         get: vi.fn().mockResolvedValue({
           data: {
-            data: [{ id: 'event1' }, { id: 'event2' }]
+            data: [{ id: 'event1' }, { id: 'event2' }],
           },
         }),
       } as unknown as AxiosInstance;
@@ -47,7 +49,7 @@ describe('BookwhenClient Integration', () => {
         '/events?filter[title]=Workshop&filter[start_at]=2023-01-01&include=location,tickets',
       );
       expect(events).toEqual({
-        data: [{ id: 'event1' }, { id: 'event2' }]
+        data: [{ id: 'event1' }, { id: 'event2' }],
       });
     });
 
@@ -100,6 +102,53 @@ describe('BookwhenClient Integration', () => {
       expect(mockAxiosInstance.get).toHaveBeenCalledWith(
         '/events?filter[tag]=workshop,seminar&filter[from]=20220101&include=location,tickets.events',
       );
+    });
+  });
+
+  describe('BookwhenClient - Tickets Service', () => {
+    it('should call the correct endpoint when tickets.getById is called', async () => {
+      const mockAxiosInstance = {
+        get: vi.fn().mockResolvedValue({
+          data: {
+            data: { id: 'ti-123' },
+          },
+        }),
+      } as unknown as AxiosInstance;
+
+      const client = new BookwhenClient(mockAxiosInstance);
+      const ticket = await client.tickets.getById({ ticketId: 'ti-123' });
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/tickets/ti-123');
+      expect(ticket).toEqual({ data: { id: 'ti-123' } });
+    });
+
+    it('should call the correct endpoint with event query when tickets.getMultiple is called', async () => {
+      const mockAxiosInstance = {
+        get: vi.fn().mockResolvedValue({
+          data: {
+            data: [{ id: 'ti-1' }],
+          },
+        }),
+      } as unknown as AxiosInstance;
+
+      const client = new BookwhenClient(mockAxiosInstance);
+      const tickets = await client.tickets.getMultiple({
+        eventId: 'ev-123',
+        includes: ['events', 'class_passes'],
+      });
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        '/tickets?event=ev-123&include=events,class_passes',
+      );
+      expect(tickets).toEqual({ data: [{ id: 'ti-1' }] });
+    });
+
+    it('should correctly initialize and expose the tickets service via the client', () => {
+      const mockAxiosInstance = {} as AxiosInstance;
+      const client = new BookwhenClient(mockAxiosInstance);
+      const ticketsService = client.tickets;
+
+      expect(ticketsService).toBeInstanceOf(TicketService);
     });
   });
 });
