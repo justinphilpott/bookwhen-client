@@ -5,10 +5,12 @@ import { createBookwhenClient } from './BookwhenClient.js';
 import { BookwhenClient } from './BookwhenClient.js';
 import { EventService } from '../services/event/Event.js';
 import { TicketService } from '../services/ticket/Ticket.js';
+import { LocationService } from '../services/location/Location.js';
 
 vi.mock('axios');
 vi.mock('../src/services/event/Event');
 vi.mock('../src/services/ticket/Ticket');
+vi.mock('../src/services/location/Location');
 
 describe('BookwhenClient', () => {
   it('should throw an error if axiosInstance is not provided', () => {
@@ -60,6 +62,16 @@ describe('BookwhenClient', () => {
     const ticketService = client.tickets;
 
     expect(ticketService['axiosInstance']).toBe(mockAxiosInstance);
+  });
+
+  it('should expose LocationService via getter', () => {
+    const mockAxiosInstance = {} as AxiosInstance;
+    const client = new BookwhenClient(mockAxiosInstance);
+
+    const locationService = client.locations;
+
+    expect(locationService['axiosInstance']).toBe(mockAxiosInstance);
+    expect(locationService).toBeInstanceOf(LocationService);
   });
 });
 

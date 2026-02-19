@@ -4,10 +4,12 @@ import { BookwhenClient } from './BookwhenClient.js';
 import type { EventResource } from '../services/event/EventInterfaces.js';
 import { EventService } from '../services/event/Event.js';
 import { TicketService } from '../services/ticket/Ticket.js';
+import { LocationService } from '../services/location/Location.js';
 
 vi.mock('axios');
 vi.mock('../src/services/event/Event');
 vi.mock('../src/services/ticket/Ticket');
+vi.mock('../src/services/location/Location');
 
 describe('BookwhenClient Integration', () => {
   describe('BookwhenClient - Events Service', () => {
@@ -149,6 +151,31 @@ describe('BookwhenClient Integration', () => {
       const ticketsService = client.tickets;
 
       expect(ticketsService).toBeInstanceOf(TicketService);
+    });
+  });
+
+  describe('BookwhenClient - Location Service', () => {
+    it('should call the correct endpoint when locations.getById is called', async () => {
+      const mockAxiosInstance = {
+        get: vi.fn().mockResolvedValue({
+          data: {
+            data: { id: 'loc-1' },
+          },
+        }),
+      } as unknown as AxiosInstance;
+
+      const client = new BookwhenClient(mockAxiosInstance);
+      const location = await client.locations.getById({ locationId: 'loc-1' });
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/locations/loc-1');
+      expect(location).toEqual({ data: { id: 'loc-1' } });
+    });
+
+    it('should correctly initialize and expose the location service via the client', () => {
+      const mockAxiosInstance = {} as AxiosInstance;
+      const client = new BookwhenClient(mockAxiosInstance);
+
+      expect(client.locations).toBeInstanceOf(LocationService);
     });
   });
 });

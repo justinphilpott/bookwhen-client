@@ -4,12 +4,11 @@ Lightweight task tracking for active development.
 
 ## Doing Now
 
-- [ ] Add `locations` service (`/locations`, `/locations/{location_id}`).
+- [ ] Add `attachments` service (`/attachments`, `/attachments/{attachment_id}`).
 - [ ] Define shared JSON:API typing strategy for additional model services before duplicating types.
 
 ## Next Up
 
-- [ ] Add `attachments` service (`/attachments`, `/attachments/{attachment_id}`).
 - [ ] Add `class_passes` service (`/class_passes`, `/class_passes/{class_pass_id}`).
 - [ ] Expose new services from `BookwhenClient` and public exports.
 - [ ] Add end-to-end browser tests for at least one non-event model service.
