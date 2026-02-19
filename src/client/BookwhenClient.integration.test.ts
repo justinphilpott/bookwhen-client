@@ -6,12 +6,14 @@ import { EventService } from '../services/event/Event.js';
 import { TicketService } from '../services/ticket/Ticket.js';
 import { LocationService } from '../services/location/Location.js';
 import { AttachmentService } from '../services/attachment/Attachment.js';
+import { ClassPassService } from '../services/class-pass/ClassPass.js';
 
 vi.mock('axios');
 vi.mock('../src/services/event/Event');
 vi.mock('../src/services/ticket/Ticket');
 vi.mock('../src/services/location/Location');
 vi.mock('../src/services/attachment/Attachment');
+vi.mock('../src/services/class-pass/ClassPass');
 
 describe('BookwhenClient Integration', () => {
   describe('BookwhenClient - Events Service', () => {
@@ -205,6 +207,33 @@ describe('BookwhenClient Integration', () => {
       const client = new BookwhenClient(mockAxiosInstance);
 
       expect(client.attachments).toBeInstanceOf(AttachmentService);
+    });
+  });
+
+  describe('BookwhenClient - ClassPass Service', () => {
+    it('should call the correct endpoint when classPasses.getById is called', async () => {
+      const mockAxiosInstance = {
+        get: vi.fn().mockResolvedValue({
+          data: {
+            data: { id: 'cp-1' },
+          },
+        }),
+      } as unknown as AxiosInstance;
+
+      const client = new BookwhenClient(mockAxiosInstance);
+      const classPass = await client.classPasses.getById({
+        classPassId: 'cp-1',
+      });
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/class_passes/cp-1');
+      expect(classPass).toEqual({ data: { id: 'cp-1' } });
+    });
+
+    it('should correctly initialize and expose the class pass service via the client', () => {
+      const mockAxiosInstance = {} as AxiosInstance;
+      const client = new BookwhenClient(mockAxiosInstance);
+
+      expect(client.classPasses).toBeInstanceOf(ClassPassService);
     });
   });
 });

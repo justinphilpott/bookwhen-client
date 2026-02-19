@@ -4,13 +4,13 @@ Lightweight task tracking for active development.
 
 ## Doing Now
 
-- [ ] Add `class_passes` service (`/class_passes`, `/class_passes/{class_pass_id}`).
 - [ ] Define shared JSON:API typing strategy for additional model services before duplicating types.
+- [ ] Add end-to-end browser tests for at least one non-event model service.
 
 ## Next Up
 
-- [ ] Expose new services from `BookwhenClient` and public exports.
-- [ ] Add end-to-end browser tests for at least one non-event model service.
+- [ ] Consolidate duplicated JSON:API envelope types across model services.
+- [ ] Prepare release notes for full model coverage parity.
 
 ## Backlog
 

@@ -7,12 +7,14 @@ import { EventService } from '../services/event/Event.js';
 import { TicketService } from '../services/ticket/Ticket.js';
 import { LocationService } from '../services/location/Location.js';
 import { AttachmentService } from '../services/attachment/Attachment.js';
+import { ClassPassService } from '../services/class-pass/ClassPass.js';
 
 vi.mock('axios');
 vi.mock('../src/services/event/Event');
 vi.mock('../src/services/ticket/Ticket');
 vi.mock('../src/services/location/Location');
 vi.mock('../src/services/attachment/Attachment');
+vi.mock('../src/services/class-pass/ClassPass');
 
 describe('BookwhenClient', () => {
   it('should throw an error if axiosInstance is not provided', () => {
@@ -84,6 +86,16 @@ describe('BookwhenClient', () => {
 
     expect(attachmentService['axiosInstance']).toBe(mockAxiosInstance);
     expect(attachmentService).toBeInstanceOf(AttachmentService);
+  });
+
+  it('should expose ClassPassService via getter', () => {
+    const mockAxiosInstance = {} as AxiosInstance;
+    const client = new BookwhenClient(mockAxiosInstance);
+
+    const classPassService = client.classPasses;
+
+    expect(classPassService['axiosInstance']).toBe(mockAxiosInstance);
+    expect(classPassService).toBeInstanceOf(ClassPassService);
   });
 });
 

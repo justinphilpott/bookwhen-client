@@ -5,6 +5,7 @@ import { EventService } from '../services/event/Event.js'; // Ensure this file a
 import { TicketService } from '../services/ticket/Ticket.js';
 import { LocationService } from '../services/location/Location.js';
 import { AttachmentService } from '../services/attachment/Attachment.js';
+import { ClassPassService } from '../services/class-pass/ClassPass.js';
 import { CLIENT_HTTP_STATUS_CODES } from '../request/httpStatusCodes.js';
 
 /**
@@ -17,6 +18,7 @@ export class BookwhenClient {
   private ticketService?: TicketService;
   private locationService?: LocationService;
   private attachmentService?: AttachmentService;
+  private classPassService?: ClassPassService;
   private readonly isBrowser: boolean;
 
   /**
@@ -70,6 +72,14 @@ export class BookwhenClient {
     }
 
     return this.attachmentService;
+  }
+
+  get classPasses(): ClassPassService {
+    if (!this.classPassService) {
+      this.classPassService = new ClassPassService(this.axiosInstance);
+    }
+
+    return this.classPassService;
   }
 }
 
