@@ -59,6 +59,8 @@ High-level release flow:
 4. Merge release PR.
 5. Tag from updated `main` (`vX.Y.Z`) and push the tag.
 
+Publishing to npm is handled by `.github/workflows/publish.yml` on tag push and uses npm trusted publishing (OIDC). No `NPM_TOKEN` secret is required.
+
 ## Documentation Expectations
 
 - Keep docs in sync with behavior in the same PR.
