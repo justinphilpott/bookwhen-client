@@ -9,6 +9,7 @@ Lightweight task tracking for active development.
 
 ## Next Up
 
+- [ ] Adopt the simplified automated Changesets release flow (main-triggered release PR/publish) from `upgrade-npm-publishing-to-trusted`.
 - [ ] Consolidate duplicated JSON:API envelope types across model services.
 - [ ] Prepare release notes for full model coverage parity.
 

@@ -61,6 +61,8 @@ Current release flow:
 
 Publishing uses npm trusted publishing (OIDC). No `NPM_TOKEN` secret is required.
 
+Planned next step: adopt the simplified automated Changesets flow from `upgrade-npm-publishing-to-trusted` so release PR/versioning and publish can run from a single main-branch workflow.
+
 ## Documentation Expectations
 
 - Keep docs in sync with behavior in the same PR.
