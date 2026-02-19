@@ -5,11 +5,13 @@ import type { EventResource } from '../services/event/EventInterfaces.js';
 import { EventService } from '../services/event/Event.js';
 import { TicketService } from '../services/ticket/Ticket.js';
 import { LocationService } from '../services/location/Location.js';
+import { AttachmentService } from '../services/attachment/Attachment.js';
 
 vi.mock('axios');
 vi.mock('../src/services/event/Event');
 vi.mock('../src/services/ticket/Ticket');
 vi.mock('../src/services/location/Location');
+vi.mock('../src/services/attachment/Attachment');
 
 describe('BookwhenClient Integration', () => {
   describe('BookwhenClient - Events Service', () => {
@@ -176,6 +178,33 @@ describe('BookwhenClient Integration', () => {
       const client = new BookwhenClient(mockAxiosInstance);
 
       expect(client.locations).toBeInstanceOf(LocationService);
+    });
+  });
+
+  describe('BookwhenClient - Attachment Service', () => {
+    it('should call the correct endpoint when attachments.getById is called', async () => {
+      const mockAxiosInstance = {
+        get: vi.fn().mockResolvedValue({
+          data: {
+            data: { id: 'att-1' },
+          },
+        }),
+      } as unknown as AxiosInstance;
+
+      const client = new BookwhenClient(mockAxiosInstance);
+      const attachment = await client.attachments.getById({
+        attachmentId: 'att-1',
+      });
+
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/attachments/att-1');
+      expect(attachment).toEqual({ data: { id: 'att-1' } });
+    });
+
+    it('should correctly initialize and expose the attachment service via the client', () => {
+      const mockAxiosInstance = {} as AxiosInstance;
+      const client = new BookwhenClient(mockAxiosInstance);
+
+      expect(client.attachments).toBeInstanceOf(AttachmentService);
     });
   });
 });

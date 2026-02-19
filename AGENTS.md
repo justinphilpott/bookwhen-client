@@ -1,6 +1,6 @@
 # Agent Context for `@jphil/bookwhen-client`
 
-TypeScript client for Bookwhen API v2, currently implementing Events, Tickets, and Locations resources with JSON:API response envelopes.
+TypeScript client for Bookwhen API v2, currently implementing Events, Tickets, Locations, and Attachments resources with JSON:API response envelopes.
 
 ## Quick Links
 
@@ -35,6 +35,8 @@ TypeScript client for Bookwhen API v2, currently implementing Events, Tickets, a
 - `src/services/ticket/TicketInterfaces.ts` - Tickets service method contracts
 - `src/services/location/Location.ts` - Locations service implementation
 - `src/services/location/LocationInterfaces.ts` - Locations service method contracts
+- `src/services/attachment/Attachment.ts` - Attachments service implementation
+- `src/services/attachment/AttachmentInterfaces.ts` - Attachments service method contracts
 - `src/utils/json-api-resolver.ts` - Relationship resolver helpers
 - `tests/browser/client.spec.ts` - Browser integration tests
 

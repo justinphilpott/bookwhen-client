@@ -4,6 +4,7 @@ import type { AxiosInstance } from 'axios';
 import { EventService } from '../services/event/Event.js'; // Ensure this file and class are setup accordingly
 import { TicketService } from '../services/ticket/Ticket.js';
 import { LocationService } from '../services/location/Location.js';
+import { AttachmentService } from '../services/attachment/Attachment.js';
 import { CLIENT_HTTP_STATUS_CODES } from '../request/httpStatusCodes.js';
 
 /**
@@ -15,6 +16,7 @@ export class BookwhenClient {
   private eventService?: EventService;
   private ticketService?: TicketService;
   private locationService?: LocationService;
+  private attachmentService?: AttachmentService;
   private readonly isBrowser: boolean;
 
   /**
@@ -60,6 +62,14 @@ export class BookwhenClient {
     }
 
     return this.locationService;
+  }
+
+  get attachments(): AttachmentService {
+    if (!this.attachmentService) {
+      this.attachmentService = new AttachmentService(this.axiosInstance);
+    }
+
+    return this.attachmentService;
   }
 }
 

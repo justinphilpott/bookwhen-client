@@ -39,7 +39,7 @@ Bookwhen resources currently implemented in this client:
 | Events       | Implemented | `/events`, `/events/{event_id}`                  |
 | Tickets      | Implemented | `/tickets`, `/tickets/{ticket_id}`               |
 | Locations    | Implemented | `/locations`, `/locations/{location_id}`         |
-| Attachments  | Planned     | `/attachments`, `/attachments/{attachment_id}`   |
+| Attachments  | Implemented | `/attachments`, `/attachments/{attachment_id}`   |
 | Class passes | Planned     | `/class_passes`, `/class_passes/{class_pass_id}` |
 
 Reference docs:
