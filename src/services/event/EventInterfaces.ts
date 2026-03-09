@@ -14,11 +14,19 @@ export interface IEventService {
   getById(params: GetEventByIdParams): Promise<EventResponse>;
 
   /**
-   * Retrieves multiple events based on specified parameters.
+   * Retrieves a single page of events based on specified parameters.
    * @param params Optional parameters to filter and control the list of returned events, according to what the Bookwhen API supports.
    * @returns A Promise that resolves to the full JSON:API response object.
    */
   getMultiple?(params?: GetMultipleEventsParams): Promise<EventsResponse>;
+
+  /**
+   * Retrieves all events matching the given filters, automatically following
+   * pagination links to fetch every page of results.
+   * @param params Optional parameters to filter the returned events.
+   * @returns A Promise that resolves to the combined JSON:API response with all pages merged.
+   */
+  getAll?(params?: GetMultipleEventsParams): Promise<EventsResponse>;
 }
 
 /**

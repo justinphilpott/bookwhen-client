@@ -388,4 +388,155 @@ describe('EventService', () => {
       });
     });
   });
+
+  describe('getAll (pagination)', () => {
+    it('should return single page when no next link exists', async () => {
+      const eventsData: Partial<BookwhenEvent>[] = [
+        { id: '1', type: 'event' },
+        { id: '2', type: 'event' },
+      ];
+
+      vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({
+        data: {
+          data: eventsData,
+          links: { self: '/events' },
+        },
+      });
+
+      const result = await eventService.getAll();
+      expect(result).toEqual({
+        data: eventsData,
+        links: { self: '/events' },
+      });
+      expect(mockAxiosInstance.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should follow pagination links and combine all pages', async () => {
+      const page1Data: Partial<BookwhenEvent>[] = [
+        { id: '1', type: 'event' },
+        { id: '2', type: 'event' },
+      ];
+      const page2Data: Partial<BookwhenEvent>[] = [
+        { id: '3', type: 'event' },
+        { id: '4', type: 'event' },
+      ];
+
+      const getSpy = vi.spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: page1Data,
+            links: { self: '/events', next: '/events?page[offset]=2' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: page2Data,
+            links: { self: '/events?page[offset]=2' },
+          },
+        });
+
+      const result = await eventService.getAll();
+      expect(result.data).toEqual([...page1Data, ...page2Data]);
+      expect(getSpy).toHaveBeenCalledTimes(2);
+      expect(getSpy).toHaveBeenNthCalledWith(2, '/events?page[offset]=2');
+    });
+
+    it('should follow multiple pagination links', async () => {
+      const page1Data: Partial<BookwhenEvent>[] = [{ id: '1', type: 'event' }];
+      const page2Data: Partial<BookwhenEvent>[] = [{ id: '2', type: 'event' }];
+      const page3Data: Partial<BookwhenEvent>[] = [{ id: '3', type: 'event' }];
+
+      const getSpy = vi.spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: page1Data,
+            links: { next: '/events?page[offset]=1' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: page2Data,
+            links: { next: '/events?page[offset]=2' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: page3Data,
+            links: { self: '/events?page[offset]=2' },
+          },
+        });
+
+      const result = await eventService.getAll();
+      expect(result.data).toEqual([...page1Data, ...page2Data, ...page3Data]);
+      expect(getSpy).toHaveBeenCalledTimes(3);
+    });
+
+    it('should deduplicate included resources across pages', async () => {
+      const sharedLocation = {
+        id: 'loc-1',
+        type: 'location',
+        attributes: { address_text: 'Shared Location' },
+      };
+      const uniqueLocation = {
+        id: 'loc-2',
+        type: 'location',
+        attributes: { address_text: 'Other Location' },
+      };
+
+      vi.spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            included: [sharedLocation],
+            links: { next: '/events?page[offset]=1' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+            included: [sharedLocation, uniqueLocation],
+          },
+        });
+
+      const result = await eventService.getAll();
+      expect(result.data).toHaveLength(2);
+      expect(result.included).toHaveLength(2);
+      expect(result.included).toEqual([sharedLocation, uniqueLocation]);
+    });
+
+    it('should pass filters through to getMultiple', async () => {
+      const filters: EventFilters = { tag: ['course'], from: '20250101' };
+      const includes: EventResource[] = ['location'];
+
+      vi.spyOn(mockAxiosInstance, 'get').mockResolvedValue({
+        data: {
+          data: [{ id: '1', type: 'event' }],
+        },
+      });
+
+      await eventService.getAll({ filters, includes });
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
+        '/events?filter[tag]=course&filter[from]=20250101&include=location',
+      );
+    });
+
+    it('should return undefined for included when no pages have included data', async () => {
+      vi.spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: '/events?page[offset]=1' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+          },
+        });
+
+      const result = await eventService.getAll();
+      expect(result.data).toHaveLength(2);
+      expect(result.included).toBeUndefined();
+    });
+  });
 });

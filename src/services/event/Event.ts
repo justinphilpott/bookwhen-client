@@ -70,7 +70,8 @@ export class EventService implements IEventService {
   }
 
   /**
-   * Retrieves multiple events based on filtering and pagination parameters.
+   * Retrieves a single page of events based on filtering and pagination parameters.
+   * The Bookwhen API returns up to 20 events per page by default.
    *
    * @param {GetMultipleEventsParams} params - Optional parameters for filtering and pagination.
    * @return {Promise<EventsResponse>} A Promise that resolves to the full JSON:API response object.
@@ -88,5 +89,65 @@ export class EventService implements IEventService {
     } catch (error) {
       handleServiceHTTPErrors(error, SERVICE_HTTP_STATUS_CODES);
     }
+  }
+
+  /**
+   * Retrieves all events matching the given filters, automatically following
+   * pagination links to fetch every page of results.
+   *
+   * The returned response contains the combined `data` and deduplicated
+   * `included` arrays from all pages.
+   *
+   * @param {GetMultipleEventsParams} params - Optional parameters for filtering.
+   * @return {Promise<EventsResponse>} A Promise that resolves to the combined JSON:API response.
+   */
+  async getAll(
+    params: GetMultipleEventsParams = {},
+  ): Promise<EventsResponse> {
+    const firstPage = await this.getMultiple(params);
+
+    if (!firstPage?.data || !firstPage.links?.next) {
+      return firstPage;
+    }
+
+    const allData = [...firstPage.data];
+    const includedById = new Map<string, any>();
+
+    if (firstPage.included) {
+      for (const item of firstPage.included) {
+        includedById.set(`${item.type}:${item.id}`, item);
+      }
+    }
+
+    let nextUrl: string | undefined = firstPage.links.next;
+
+    while (nextUrl) {
+      try {
+        const page: EventsResponse =
+          (await this.axiosInstance.get<EventsResponse>(nextUrl)).data;
+
+        if (page.data) {
+          allData.push(...page.data);
+        }
+
+        if (page.included) {
+          for (const item of page.included) {
+            includedById.set(`${item.type}:${item.id}`, item);
+          }
+        }
+
+        nextUrl = page.links?.next;
+      } catch (error) {
+        handleServiceHTTPErrors(error, SERVICE_HTTP_STATUS_CODES);
+      }
+    }
+
+    return {
+      data: allData,
+      included:
+        includedById.size > 0
+          ? Array.from(includedById.values())
+          : undefined,
+    };
   }
 }
