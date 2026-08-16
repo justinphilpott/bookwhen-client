@@ -1,5 +1,11 @@
 # @jphil/bookwhen-client
 
+## 0.6.1
+
+### Patch Changes
+
+- eaee187: Prevent event pagination from leaking credentials or making unbounded requests by rejecting cross-origin and repeated links and enforcing a configurable page limit.
+
 ## 0.6.0
 
 ### Minor Changes
