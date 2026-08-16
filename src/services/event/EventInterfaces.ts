@@ -26,7 +26,7 @@ export interface IEventService {
    * @param params Optional parameters to filter the returned events.
    * @returns A Promise that resolves to the combined JSON:API response with all pages merged.
    */
-  getAll?(params?: GetMultipleEventsParams): Promise<EventsResponse>;
+  getAll?(params?: GetAllEventsParams): Promise<EventsResponse>;
 }
 
 /**
@@ -47,6 +47,14 @@ export interface GetEventByIdParams {
 export interface GetMultipleEventsParams {
   filters?: EventFilters;
   includes?: EventResource[];
+}
+
+/**
+ * Parameters for retrieving every page of events.
+ * @param maxPages Maximum number of pages to request. Defaults to 100.
+ */
+export interface GetAllEventsParams extends GetMultipleEventsParams {
+  maxPages?: number;
 }
 
 interface EventFiltersMap {

@@ -30,6 +30,19 @@ const events = response.data;
 const included = response.included;
 ```
 
+Use `getAll()` to follow same-origin pagination links and combine every page.
+It requests at most 100 pages by default; set `maxPages` explicitly when a
+different bound is appropriate:
+
+```typescript
+const response = await client.events.getAll({
+  filters: { from: '20250101' },
+  maxPages: 25,
+});
+```
+
+`getAll()` rejects cross-origin and repeated pagination links.
+
 ## API Coverage
 
 Bookwhen resources currently implemented in this client:

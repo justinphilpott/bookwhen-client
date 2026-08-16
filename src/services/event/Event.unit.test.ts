@@ -17,6 +17,7 @@ describe('EventService', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   it('should retrieve a single event by ID', async () => {
@@ -469,6 +470,216 @@ describe('EventService', () => {
       const result = await eventService.getAll();
       expect(result.data).toEqual([...page1Data, ...page2Data, ...page3Data]);
       expect(getSpy).toHaveBeenCalledTimes(3);
+    });
+
+    it('should follow an absolute pagination link on the API origin', async () => {
+      mockAxiosInstance.defaults.baseURL = 'https://api.bookwhen.com/v2';
+      const nextUrl = 'https://api.bookwhen.com/v2/events?page[offset]=1';
+      const getSpy = vi
+        .spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: nextUrl },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+          },
+        });
+
+      const result = await eventService.getAll();
+
+      expect(result.data).toHaveLength(2);
+      expect(getSpy).toHaveBeenNthCalledWith(2, nextUrl);
+    });
+
+    it('should normalize a protocol-relative link on the API origin', async () => {
+      mockAxiosInstance.defaults.baseURL = 'https://api.bookwhen.com/v2';
+      const getSpy = vi
+        .spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: '//api.bookwhen.com/v2/events?page[offset]=1' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+          },
+        });
+
+      await eventService.getAll();
+
+      expect(getSpy).toHaveBeenNthCalledWith(
+        2,
+        'https://api.bookwhen.com/v2/events?page[offset]=1',
+      );
+    });
+
+    it('should resolve a relative base URL against the browser origin', async () => {
+      vi.stubGlobal('window', {
+        location: { href: 'https://app.example.com/schedule' },
+      });
+      mockAxiosInstance.defaults.baseURL = '/api';
+      const nextUrl = 'https://app.example.com/api/events?page[offset]=1';
+      const getSpy = vi
+        .spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: nextUrl },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+          },
+        });
+
+      await eventService.getAll();
+
+      expect(getSpy).toHaveBeenNthCalledWith(2, nextUrl);
+    });
+
+    it.each([
+      'https://example.com/events?page[offset]=1',
+      'http://api.bookwhen.com/v2/events?page[offset]=1',
+      'https://api.bookwhen.com:444/v2/events?page[offset]=1',
+      '//example.com/events?page[offset]=1',
+    ])(
+      'should reject a pagination link on another origin: %s',
+      async (nextUrl) => {
+        mockAxiosInstance.defaults.baseURL = 'https://api.bookwhen.com/v2';
+        const getSpy = vi
+          .spyOn(mockAxiosInstance, 'get')
+          .mockResolvedValueOnce({
+            data: {
+              data: [{ id: '1', type: 'event' }],
+              links: { next: nextUrl },
+            },
+          });
+
+        await expect(eventService.getAll()).rejects.toThrow(
+          'events.getAll: Refusing a pagination URL from a different origin',
+        );
+        expect(getSpy).toHaveBeenCalledTimes(1);
+      },
+    );
+
+    it('should reject a repeated pagination link', async () => {
+      const nextUrl = '/events?page[offset]=1';
+      const getSpy = vi
+        .spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: nextUrl },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+            links: { next: nextUrl },
+          },
+        });
+
+      await expect(eventService.getAll()).rejects.toThrow(
+        'events.getAll: Refusing to follow a repeated pagination URL',
+      );
+      expect(getSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should reject a link back to the initial page', async () => {
+      const getSpy = vi.spyOn(mockAxiosInstance, 'get').mockResolvedValueOnce({
+        data: {
+          data: [{ id: '1', type: 'event' }],
+          links: { next: '/events' },
+        },
+      });
+
+      await expect(eventService.getAll()).rejects.toThrow(
+        'events.getAll: Refusing to follow a repeated pagination URL',
+      );
+      expect(getSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should treat equivalent relative links as the same page', async () => {
+      mockAxiosInstance.defaults.baseURL = 'https://api.bookwhen.com/v2';
+      const getSpy = vi
+        .spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: '/events?page[offset]=1' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+            links: { next: './events?page[offset]=1' },
+          },
+        });
+
+      await expect(eventService.getAll()).rejects.toThrow(
+        'events.getAll: Refusing to follow a repeated pagination URL',
+      );
+      expect(getSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should treat URL fragments as the same pagination link', async () => {
+      const getSpy = vi
+        .spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: '/events?page[offset]=1#first' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+            links: { next: '/events?page[offset]=1#second' },
+          },
+        });
+
+      await expect(eventService.getAll()).rejects.toThrow(
+        'events.getAll: Refusing to follow a repeated pagination URL',
+      );
+      expect(getSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should stop at the configured page limit', async () => {
+      const getSpy = vi
+        .spyOn(mockAxiosInstance, 'get')
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '1', type: 'event' }],
+            links: { next: '/events?page[offset]=1' },
+          },
+        })
+        .mockResolvedValueOnce({
+          data: {
+            data: [{ id: '2', type: 'event' }],
+            links: { next: '/events?page[offset]=2' },
+          },
+        });
+
+      await expect(eventService.getAll({ maxPages: 2 })).rejects.toThrow(
+        'events.getAll: Reached the 2-page pagination limit',
+      );
+      expect(getSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should reject an invalid page limit before making a request', async () => {
+      const getSpy = vi.spyOn(mockAxiosInstance, 'get');
+
+      await expect(eventService.getAll({ maxPages: 0 })).rejects.toThrow(
+        'events.getAll: maxPages must be a positive safe integer',
+      );
+      expect(getSpy).not.toHaveBeenCalled();
     });
 
     it('should deduplicate included resources across pages', async () => {
